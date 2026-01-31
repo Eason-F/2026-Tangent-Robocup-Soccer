@@ -16,3 +16,8 @@ void loop() {
 int myFunction(int x, int y) {
   return x + y;
 }
+
+
+int cool(int a, int b) {
+  return a * b;
+}
