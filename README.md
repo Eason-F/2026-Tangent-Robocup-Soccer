@@ -1,0 +1,3 @@
+# Robocup Junior Soccer - Team Tangent
+
+This is Tangent's robot code for 2026 Robocup Junior Lightweight Soccer. Development for this year was done using the Teensy 4.1 microcontroller boards.
