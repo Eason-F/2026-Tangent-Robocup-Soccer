@@ -1,12 +1,11 @@
-#include <Arduino.h>
+enum MotorDirection {
+    ANTICLOCKWISE,
+    CLOCKWISE
+};
 
 class Motor {
     public:
         const static int PULSE_PER_REVOLUTION = 18;
-        
-        int pwmPin;
-        int directionPin;
-        int pulsePin;
 
         int angularVelocityRPM;
         volatile int pulseCount;
@@ -15,10 +14,10 @@ class Motor {
 
         void incrementPulseCount();
 
-        void setMotorSpeed(int speed, MotorDirection direction);
-};
+        void setMotorSpeed(int speed, enum MotorDirection direction);
 
-enum MotorDirection {
-    ANTICLOCKWISE,
-    CLOCKWISE
+    private: 
+        int pwmPin;
+        int directionPin;
+        int pulsePin;
 };
