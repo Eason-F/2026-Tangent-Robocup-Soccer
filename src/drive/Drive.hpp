@@ -1,4 +1,7 @@
+#pragma once
+
 #include <drive/motor/Motor.hpp>
+#include <util/util.hpp>
 
 class Drive {
     public:
@@ -10,7 +13,8 @@ class Drive {
         Drive();
 
         void moveInDirection(int directionDegrees, int speed);
-        
+
+        void turnInDirection(int direction, int speed);
 
     private: 
         const int PWM_PIN_1 = 11;
@@ -28,5 +32,4 @@ class Drive {
         const int PWM_PIN_4 = 3;
         const int DIRECTION_PIN_4 = 4;
         const int PULSE_PIN_4 = 2;
-
 };
