@@ -1,6 +1,7 @@
-#pragma once
-
-#include <util/util.hpp>
+enum MotorDirection {
+    ANTICLOCKWISE,
+    CLOCKWISE
+};
 
 class Motor {
     public:
@@ -9,13 +10,11 @@ class Motor {
         int angularVelocityRPM;
         volatile int pulseCount;
 
-        Motor();
-
-        Motor(const int &pwmPin, const int &directionPin, const int &pulsePin);
+        Motor(const int pwmPin, const int directionPin, const int pulsePin);
 
         void incrementPulseCount();
 
-        void setMotorSpeed(int speed);
+        void setMotorSpeed(int speed, enum MotorDirection direction);
 
     private: 
         int pwmPin;
