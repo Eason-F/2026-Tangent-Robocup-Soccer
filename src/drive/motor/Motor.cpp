@@ -16,6 +16,8 @@ Motor::Motor(const int &pwmPin, const int &directionPin, const int &pulsePin) {
     pinMode(pwmPin, OUTPUT);
     pinMode(directionPin, OUTPUT);
     pinMode(pulsePin, INPUT);
+
+    setMotorSpeed(0);
 }
 
 void Motor::incrementPulseCount() {
@@ -23,7 +25,7 @@ void Motor::incrementPulseCount() {
 }
 
 void Motor::setMotorSpeed(int speed) {
-    speed = 255 - (speed / 100) * 255;
-    digitalWrite(directionPin, (speed > 0) ? HIGH : LOW);
-    analogWrite(pwmPin, speed);
+    int motorSpeed = 255 - abs((speed / 100.0) * 255);
+    digitalWrite(directionPin, (speed > 0) ? LOW : HIGH);
+    analogWrite(pwmPin, motorSpeed);
 }

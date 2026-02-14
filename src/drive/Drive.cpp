@@ -9,8 +9,8 @@ Drive::Drive() {
 }
 
 void Drive::moveInDirection(int directionDegrees, int speed) {
-    motor1.setMotorSpeed(cos(directionDegrees + 315) * speed);
-    motor2.setMotorSpeed(cos(directionDegrees + 45) * speed);
-    motor3.setMotorSpeed(cos(directionDegrees + 135) * speed);
-    motor4.setMotorSpeed(cos(directionDegrees + 225) * speed);
+    motor1.setMotorSpeed(cos(radians(directionDegrees + 315)) * speed);
+    motor2.setMotorSpeed(cos(radians(directionDegrees + 45)) * speed);
+    motor3.setMotorSpeed(cos(radians(directionDegrees + 135)) * speed);
+    motor4.setMotorSpeed(cos(radians(directionDegrees + 225)) * speed);
 }
