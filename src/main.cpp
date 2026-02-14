@@ -1,10 +1,7 @@
-#include <Robot.hpp>
-
-Robot robot;
+#include <Arduino.h>
 
 void setup() {
 }
 
 void loop() {
-    robot.run();
 }

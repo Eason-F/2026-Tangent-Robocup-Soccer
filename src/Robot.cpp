@@ -1,5 +1,8 @@
-#include <Robot.hpp>
+#include <util/util.hpp>
+#include <drive/Drive.hpp>
 
-void Robot::run() {
-    drive.moveInDirection(0, 100);
-}
+class Robot {
+    public:
+
+    private:
+};
