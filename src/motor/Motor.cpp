@@ -1,6 +1,4 @@
-#include <Arduino.h>
-
-#include <drive/motor/Motor.hpp>
+#include <motor/Motor.hpp>
 
 Motor::Motor(const int pwmPin, const int directionPin, const int pulsePin) {
     this-> pwmPin = pwmPin;
@@ -16,7 +14,7 @@ void Motor::incrementPulseCount() {
     pulseCount++;
 }
 
-void Motor::setMotorSpeed(int speed, enum MotorDirection direction) {
+void Motor::setMotorSpeed(int speed, MotorDirection direction) {
     speed = 255 - (speed / 100) * 255;
     digitalWrite(directionPin, direction);
     analogWrite(pwmPin, speed);
