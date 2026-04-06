@@ -4,28 +4,63 @@
 
 Motor::Motor() {
     this-> pwmPin = 99;
-    this-> directionPin = 99;
-    this-> pulsePin = 99;
+    this-> directionPin1 = 99;
+    this-> directionPin2 = 99;
 }
 
-Motor::Motor(const int &pwmPin, const int &directionPin, const int &pulsePin) {
+Motor::Motor(const int &pwmPin, const int &directionPin1, const int &directionPin2) {
     this-> pwmPin = pwmPin;
-    this-> directionPin = directionPin;
-    this-> pulsePin = pulsePin;
+    this-> directionPin1 = directionPin1;
+    this-> directionPin2 = directionPin2;
 
     pinMode(pwmPin, OUTPUT);
-    pinMode(directionPin, OUTPUT);
-    pinMode(pulsePin, INPUT);
+    pinMode(directionPin1, OUTPUT);
+    pinMode(directionPin2, OUTPUT);
 
-    setMotorSpeed(0);
+    setMotorDutyCycle(0);
+};
+
+Motor::Motor(const int &pwmPin, const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController pidController) {
+    Motor(pwmPin, directionPin1, directionPin2);
+    this-> encoderPin1 = encoderPin1;
+    this-> encoderPin2 = encoderPin2;
+    this-> pidController = pidController;
+    
+    this-> encoder = Encoder(encoderPin1, encoderPin2);
 }
 
-void Motor::incrementPulseCount() {
-    pulseCount++;
+float Motor::getRPM(long dt) {
+    pulseCount = encoder.read();
+    long delta = pulseCount - previousPulseCount;
+    previousPulseCount = pulseCount;
+    return (delta / (float)PULSE_PER_REVOLUTION) / dt * 60.0;
+};
+
+void Motor::brake() {
+    digitalWrite(directionPin1, LOW);
+    digitalWrite(directionPin2, LOW);
 }
 
-void Motor::setMotorSpeed(int speed) {
+void Motor::clockwise() {
+    digitalWrite(directionPin1, HIGH);
+    digitalWrite(directionPin2, LOW);
+}
+
+void Motor::anticlockwise() {
+    digitalWrite(directionPin1, LOW);
+    digitalWrite(directionPin2, HIGH);
+}
+
+void Motor::setMotorDutyCycle(int speed) {
+    Serial.println(speed);
     int motorSpeed = 255 - abs((speed / 100.0) * 255);
-    digitalWrite(directionPin, (speed > 0) ? LOW : HIGH);
+    if (speed > 0) anticlockwise(); else clockwise();
     analogWrite(pwmPin, motorSpeed);
+}
+
+void Motor::setMotorRPM(int rpm, long dt) {
+    float currentRPM = getRPM(dt);
+    float error = rpm - currentRPM;
+    if (rpm > 0) clockwise(); else anticlockwise();
+    analogWrite(pwmPin, pidController.adjustmentValue(rpm, error));
 }
