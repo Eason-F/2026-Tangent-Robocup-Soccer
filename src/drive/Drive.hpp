@@ -10,6 +10,8 @@ class Drive {
         Motor motor3;
         Motor motor4;
 
+        PIDController pidController = PIDController(1, 0, 0);
+
         Drive();
 
         void moveInDirection(int directionDegrees, int speed);
@@ -17,19 +19,31 @@ class Drive {
         void turnInDirection(int direction, int speed);
 
     private: 
-        const int PWM_PIN_1 = 11;
-        const int DIRECTION_PIN_1 = 12;
-        const int PULSE_PIN_1 = 13;
+        const int STBY_PIN_1 = 99;
+        const int STBY_PIN_2 = 99;
 
-        const int PWM_PIN_2 = 9;
-        const int DIRECTION_PIN_2 = 8;
-        const int PULSE_PIN_2 = 10;
+        const int PWM_PIN_1 = 99;
+        const int DIRECTION_PIN1_1 = 99;
+        const int DIRECTION_PIN2_1 = 99;
+        const int ENCODER_PIN1_1 = 99;
+        const int ENCODER_PIN2_1 = 99;
 
-        const int PWM_PIN_3 = 6;
-        const int DIRECTION_PIN_3 = 7;
-        const int PULSE_PIN_3 = 5;
+        const int PWM_PIN_2 = 99;
+        const int DIRECTION_PIN1_2 = 99;
+        const int DIRECTION_PIN2_2 = 99;
+        const int ENCODER_PIN1_2 = 99;
+        const int ENCODER_PIN2_2 = 99;
 
-        const int PWM_PIN_4 = 3;
-        const int DIRECTION_PIN_4 = 4;
-        const int PULSE_PIN_4 = 2;
+        const int PWM_PIN_3 = 99;
+        const int DIRECTION_PIN1_3 = 99;
+        const int DIRECTION_PIN2_3 = 99;
+        const int ENCODER_PIN1_3 = 99;
+        const int ENCODER_PIN2_3 = 99;
+
+        const int PWM_PIN_4 = 99;
+        const int DIRECTION_PIN1_4 = 99;
+        const int DIRECTION_PIN2_4 = 99;
+        const int ENCODER_PIN1_4 = 99;
+        const int ENCODER_PIN2_4 = 99;
+
 };
