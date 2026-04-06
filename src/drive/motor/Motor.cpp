@@ -42,18 +42,19 @@ void Motor::brake() {
 }
 
 void Motor::clockwise() {
-    digitalWrite(directionPin1, LOW);
-    digitalWrite(directionPin2, HIGH);
-}
-
-void Motor::anticlockwise() {
     digitalWrite(directionPin1, HIGH);
     digitalWrite(directionPin2, LOW);
 }
 
+void Motor::anticlockwise() {
+    digitalWrite(directionPin1, LOW);
+    digitalWrite(directionPin2, HIGH);
+}
+
 void Motor::setMotorDutyCycle(int speed) {
+    Serial.println(speed);
     int motorSpeed = 255 - abs((speed / 100.0) * 255);
-    if (speed > 0) clockwise(); else anticlockwise();
+    if (speed > 0) anticlockwise(); else clockwise();
     analogWrite(pwmPin, motorSpeed);
 }
 
