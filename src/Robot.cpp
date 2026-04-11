@@ -1,5 +1,5 @@
 #include <Robot.hpp>
 
 void Robot::run() {
-    drive.moveInDirection(0, 100);
+    drive.moveInDirection(270, 100);
 }

@@ -40,9 +40,9 @@ class Drive {
         const int ENCODER_PIN1_3 = 99;
         const int ENCODER_PIN2_3 = 99;
 
-        const int PWM_PIN_4 = 22;
+        const int PWM_PIN_4 = 23;
         const int DIRECTION_PIN1_4 = 21;
-        const int DIRECTION_PIN2_4 = 20;
+        const int DIRECTION_PIN2_4 = 22;
         const int ENCODER_PIN1_4 = 99;
         const int ENCODER_PIN2_4 = 99;
 
