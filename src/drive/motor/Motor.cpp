@@ -53,7 +53,7 @@ void Motor::anticlockwise() {
 }
 
 void Motor::setMotorDutyCycle(int speed) {
-    int motorSpeed = 255 - abs((speed / 100.0) * 255);
+    int motorSpeed = abs((speed / 100.0) * 255);
     if (speed > 0) anticlockwise(); else clockwise();
     analogWrite(pwmPin, motorSpeed);
 }
