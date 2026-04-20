@@ -13,3 +13,33 @@ float PIDController::adjustmentValue(float dt, float current, float target) {
     LOG("pid value", value);
     return value;
 };
+
+Vector::Vector(Position, const float &posX, const float &posY) {
+    this-> x = posX;
+    this-> y = posY;
+    angle = acos(posY / posX);
+    length = sqrt(pow(posX, 2) + pow(posY, 2));
+}
+
+Vector::Vector(AngDir, const float &angle, const float &length) {
+    this-> angle = angle;
+    this-> length = length;
+    x = length * cos(angle);
+    y = length * sin(angle);
+}
+
+Vector Vector::operator+(const Vector &vec) {
+    return Vector(Position {}, x + vec.x, y + vec.y);
+}
+
+Vector Vector::operator-(const Vector &vec) {
+    return Vector(Position {}, x - vec.x, y - vec.y);
+}
+
+Vector Vector::operator*(const float &n) {
+    return Vector(Position {}, x * n, y * n);
+}
+
+Vector Vector::operator/(const float &n) {
+    return Vector(Position {}, x / n, y / n);
+}

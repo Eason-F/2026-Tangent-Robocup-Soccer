@@ -23,3 +23,20 @@ class PIDController {
 
         float adjustmentValue(float dt, float target, float current);
 };
+
+class Vector {
+    float x;
+    float y;
+    float angle;
+    float length;
+
+    struct Position{}; // structs for constructor differentiation
+    struct AngDir{};
+    Vector(Position, const float &posX, const float &posY);
+    Vector(AngDir, const float &angle, const float &length);
+
+    Vector operator+(const Vector &vec);
+    Vector operator-(const Vector &vec);
+    Vector operator*(const float &n);
+    Vector operator/(const float &n);
+};
