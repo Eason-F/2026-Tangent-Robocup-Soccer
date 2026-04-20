@@ -2,6 +2,8 @@
 
 #include <Arduino.h>
 
+#define LOG(header, text) Serial.print(header); Serial.println(text);
+
 class Direction {
     public:
         const static int CLOCKWISE = 1;
