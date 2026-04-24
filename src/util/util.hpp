@@ -17,15 +17,16 @@ class PIDController {
 
 class Vector {
     public:
-        float x;
-        float y;
-        float angle;
-        float length;
+        float x = 0;
+        float y = 0;
+        float angle = 0;
+        float length = 0;
 
         struct Position{}; // structs for constructor differentiation
-        struct AngDir{};
+        struct AngMag{};
+        Vector();
         Vector(Position, const float &posX, const float &posY);
-        Vector(AngDir, const float &angle, const float &length);
+        Vector(AngMag, const float &angle, const float &length);
 
         Vector operator+(const Vector &vec);
         Vector operator-(const Vector &vec);

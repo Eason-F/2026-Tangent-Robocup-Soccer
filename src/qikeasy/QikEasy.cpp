@@ -20,3 +20,32 @@ uint16_t QikEasy::signalStrength(const int &receiverID) {
     }
     return strength;
 }
+
+void QikEasy::updateReadings() {
+    for (int i = 0; i < 10; i++) {
+        uint16_t strength = signalStrength(i);
+        float direction = (i * PI / 5) - (2 * PI) / 5;
+        if (direction > 180) direction -= 360;
+        allVecs[i] = Vector(Vector::AngMag {}, direction, strength);
+    }
+
+    Vector *strongestVectors[AVERAGED_VECTOR_MAX];
+    for (int i = 0; i < AVERAGED_VECTOR_MAX; i++) {
+        for (int j = 0; j < 10; j++) {
+            if (allVecs[j].length > strongestVectors[i]-> length) {
+                strongestVectors[i] = &allVecs[j];
+                allVecs[j] = Vector();
+            }
+        }
+    }
+
+    signalVec = Vector();
+    for (int i = 0; i < AVERAGED_VECTOR_MAX; i++) {
+        signalVec = signalVec + *strongestVectors[i];
+    }
+    signalVec.length = strongestVectors[0]-> length;
+}
+
+float QikEasy::strengthToDistance(const uint16_t &strength) {
+    return 0.0f;
+}
