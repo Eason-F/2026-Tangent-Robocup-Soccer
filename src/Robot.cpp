@@ -2,5 +2,5 @@
 
 void Robot::run() {
     odometry.updatePosition();
-    Serial.print("X: "); Serial.print(odometry.getX()); Serial.print("    "); Serial.print("Y: "); Serial.println(odometry.getY());
+    LOG_PRINT("X", odometry.getX()); LOG_PRINT("Y", odometry.getY()); LOG_NEXT;
 }

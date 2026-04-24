@@ -2,7 +2,8 @@
 
 #include <Arduino.h>
 
-#define LOG(header, text) Serial.print(header); Serial.println(text);
+#define LOG_PRINT(header, text) Serial.print(header); Serial.print(": "); Serial.print(text); Serial.print("\t|\t")
+#define LOG_NEXT Serial.println();
 
 class Direction {
     public:
