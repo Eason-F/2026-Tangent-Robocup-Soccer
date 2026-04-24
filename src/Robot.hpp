@@ -2,6 +2,7 @@
 
 #include <drive/Drive.hpp>
 #include <odometry/Odometry.hpp>
+#include <qikeasy/QikEasy.hpp>
 #include <util/button.hpp>
 
 class Robot {
@@ -9,6 +10,7 @@ class Robot {
         Button startButton;
         Drive drive;
         OpticalOdometry odometry = OpticalOdometry(Wire);
+        QikEasy irSensor = QikEasy(Wire1);
         
         void run();
 
