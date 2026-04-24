@@ -21,7 +21,7 @@ Vector::Vector(Position, const float &posX, const float &posY) {
     length = sqrt(pow(posX, 2) + pow(posY, 2));
 }
 
-Vector::Vector(AngDir, const float &angle, const float &length) {
+Vector::Vector(AngMag, const float &angle, const float &length) {
     this-> angle = angle;
     this-> length = length;
     x = length * cos(angle);
