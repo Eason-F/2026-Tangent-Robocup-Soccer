@@ -18,6 +18,7 @@ Motor::Motor(const int &pwmPin, const int &directionPin1, const int &directionPi
     pinMode(directionPin2, OUTPUT);
 
     setMotorDutyCycle(0);
+    brake();
 };
 
 Motor::Motor(const int &pwmPin, const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController pidController) {
@@ -52,8 +53,7 @@ void Motor::anticlockwise() {
 }
 
 void Motor::setMotorDutyCycle(int speed) {
-    Serial.println(speed);
-    int motorSpeed = 255 - abs((speed / 100.0) * 255);
+    int motorSpeed = abs((speed / 100.0) * 255);
     if (speed > 0) anticlockwise(); else clockwise();
     analogWrite(pwmPin, motorSpeed);
 }
