@@ -2,4 +2,6 @@
 
 void Robot::run() {
     drive.moveInDirection(270, 100);
+    odometry.updatePosition();
+    LOG_PRINT("X", odometry.getX()); LOG_PRINT("Y", odometry.getY()); LOG_NEXT;
 }
