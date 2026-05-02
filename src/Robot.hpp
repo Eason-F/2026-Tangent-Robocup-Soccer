@@ -14,4 +14,6 @@ class Robot {
         void run();
 
     private:
+        const uint LOOP_TIME_MS = 50;
+        unsigned long lastTime = millis();
 };

@@ -7,10 +7,8 @@ Drive::Drive() {
     motor3 = Motor(PWM_PIN_3, DIRECTION_PIN1_3, DIRECTION_PIN2_3);
     motor4 = Motor(PWM_PIN_4, DIRECTION_PIN1_4, DIRECTION_PIN2_4);
 
-    pinMode(STBY_PIN_1, OUTPUT);
-    pinMode(STBY_PIN_2, OUTPUT);
-    digitalWrite(STBY_PIN_1, HIGH);
-    digitalWrite(STBY_PIN_2, HIGH);
+    pinMode(STBY_PIN, OUTPUT);
+    digitalWrite(STBY_PIN, HIGH);
 }
 
 void Drive::moveInDirection(int directionDegrees, int speed) {
