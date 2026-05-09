@@ -22,19 +22,27 @@ Motor::Motor(const int &pwmPin, const int &directionPin1, const int &directionPi
 };
 
 Motor::Motor(const int &pwmPin, const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController pidController) {
-    Motor(pwmPin, directionPin1, directionPin2);
+    this-> pwmPin = pwmPin;
+    this-> directionPin1 = directionPin1;
+    this-> directionPin2 = directionPin2;
     this-> encoderPin1 = encoderPin1;
     this-> encoderPin2 = encoderPin2;
     this-> pidController = pidController;
-    
     this-> encoder = Encoder(encoderPin1, encoderPin2);
+
+    pinMode(pwmPin, OUTPUT);
+    pinMode(directionPin1, OUTPUT);
+    pinMode(directionPin2, OUTPUT);
+
+    setMotorDutyCycle(0);
+    brake();
 }
 
 float Motor::getRPM(long dt) {
-    pulseCount = encoder.read();
+    pulseCount = encoder.readAndReset();
     long delta = pulseCount - previousPulseCount;
     previousPulseCount = pulseCount;
-    return (delta / (float)PULSE_PER_REVOLUTION) / dt * 60.0;
+    return (delta / (float)PULSE_PER_REVOLUTION) / dt * 6000.0;
 };
 
 void Motor::brake() {
@@ -60,7 +68,6 @@ void Motor::setMotorDutyCycle(int speed) {
 
 void Motor::setMotorRPM(int rpm, long dt) {
     float currentRPM = getRPM(dt);
-    float error = rpm - currentRPM;
-    if (rpm > 0) clockwise(); else anticlockwise();
-    analogWrite(pwmPin, pidController.adjustmentValue(rpm, error));
+    if (rpm > 0) anticlockwise(); else clockwise();
+    analogWrite(pwmPin, -pidController.adjustmentValue(rpm, currentRPM));
 }

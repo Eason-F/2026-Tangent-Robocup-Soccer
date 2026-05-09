@@ -9,6 +9,7 @@
 class Robot {
     public:
         Button startButton;
+        Drive drive;
         // Drive drive;
         ColourSensor colourSensor = ColourSensor(20);
         // OpticalOdometry odometry = OpticalOdometry(Wire);
@@ -16,4 +17,6 @@ class Robot {
         void run();
 
     private:
+        const uint LOOP_TIME_MS = 50;
+        unsigned long lastTime = millis();
 };

@@ -28,5 +28,5 @@ class PIDController {
         PIDController(const float &kP, const float &kI, const float &kD);
         PIDController(PIDValues pidValues);
 
-        float adjustmentValue(float target, float error);
+        float adjustmentValue(float target, float current);
 };

@@ -1,6 +1,13 @@
 #include <Robot.hpp>
 
 void Robot::run() {
+    unsigned long now = millis();
+    float dt = (now - lastTime) / 1000.0f;
+    // if (now - lastTime >= LOOP_TIME_MS) {
+    //     drive.motor1.setMotorRPM(100, dt);
+    // }
+    drive.moveInDirection(0, 100);
+
 
     if (colourSensor.detectedEdge()) {
         Serial.println("Edge detected!");
