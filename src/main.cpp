@@ -1,11 +1,11 @@
-// #include <Robot.hpp>
+#include <Robot.hpp>
 
-// Robot robot;
+Robot robot;
 
-// void setup() {
-//     Serial.begin(9600);
-// }
+void setup() {
+    Serial.begin(115200);
+}
 
-// void loop() {
-//     colour.run();
-// }
+void loop() {
+    robot.run();
+}

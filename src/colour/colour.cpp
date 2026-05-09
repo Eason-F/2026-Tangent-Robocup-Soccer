@@ -1,22 +1,29 @@
-// #include <Arduino.h>
+#include "colour.hpp"
 
-// // main.cpp (或 sketch.ino)
-// const int interruptPin = 20;
-// volatile bool edgeDetected = false;
 
-// void onFallingEdge() {
-//     edgeDetected = true;
-// }
+ColourSensor* ColourSensor::instance = nullptr;
 
-// void setup() {
-//     Serial.begin(9600);
-//     pinMode(interruptPin, INPUT_PULLUP);
-//     attachInterrupt(digitalPinToInterrupt(interruptPin), onFallingEdge, FALLING);
-// }
+void ColourSensor::onFallingEdge() {
+    onField = true;
+}
 
-// void loop() {
-//     if (edgeDetected) {
-//         edgeDetected = false;
-//         Serial.println("Edge detected!");
-//     }
-// }
+
+ColourSensor::ColourSensor(const int &pin) {
+    instance = this;
+    pinMode(pin, INPUT_PULLUP);
+    attachInterrupt(pin, ColourSensor::interruptWrapper, RISING);
+}
+
+void ColourSensor::interruptWrapper() {
+    if (instance != nullptr) {
+        instance->onFallingEdge();
+    }
+}
+
+bool ColourSensor::detectedEdge() {
+    if (onField) {
+        onField = false;
+        return true;
+    }
+    return false;
+}
