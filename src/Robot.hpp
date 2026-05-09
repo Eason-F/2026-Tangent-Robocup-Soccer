@@ -9,7 +9,7 @@ class Robot {
     public:
         Button startButton;
         Drive drive;
-        OpticalOdometry odometry = OpticalOdometry(Wire);
+        // OpticalOdometry odometry = OpticalOdometry(Wire);
         
         void run();
 
