@@ -3,17 +3,14 @@
 #include <drive/motor/Motor.hpp>
 
 Motor::Motor() {
-    this-> pwmPin = 99;
     this-> directionPin1 = 99;
     this-> directionPin2 = 99;
 }
 
-Motor::Motor(const int &pwmPin, const int &directionPin1, const int &directionPin2) {
-    this-> pwmPin = pwmPin;
+Motor::Motor(const int &directionPin1, const int &directionPin2) {
     this-> directionPin1 = directionPin1;
     this-> directionPin2 = directionPin2;
 
-    pinMode(pwmPin, OUTPUT);
     pinMode(directionPin1, OUTPUT);
     pinMode(directionPin2, OUTPUT);
 
@@ -21,8 +18,7 @@ Motor::Motor(const int &pwmPin, const int &directionPin1, const int &directionPi
     brake();
 };
 
-Motor::Motor(const int &pwmPin, const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController pidController) {
-    this-> pwmPin = pwmPin;
+Motor::Motor(const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController &pidController) {
     this-> directionPin1 = directionPin1;
     this-> directionPin2 = directionPin2;
     this-> encoderPin1 = encoderPin1;
@@ -30,19 +26,17 @@ Motor::Motor(const int &pwmPin, const int &directionPin1, const int &directionPi
     this-> pidController = pidController;
     this-> encoder = Encoder(encoderPin1, encoderPin2);
 
-    pinMode(pwmPin, OUTPUT);
     pinMode(directionPin1, OUTPUT);
     pinMode(directionPin2, OUTPUT);
 
     setMotorDutyCycle(0);
-    brake();
 }
 
 float Motor::getRPM(long dt) {
-    pulseCount = encoder.readAndReset();
-    long delta = pulseCount - previousPulseCount;
-    previousPulseCount = pulseCount;
-    return (delta / (float)PULSE_PER_REVOLUTION) / dt * 6000.0;
+    long delta = encoder.readAndReset();
+    LOG_PRINT("count", delta);
+    angularVelocityRPM = (delta / (float)PULSE_PER_REVOLUTION) * (60.0 / dt);
+    return angularVelocityRPM;
 };
 
 void Motor::brake() {
@@ -50,24 +44,25 @@ void Motor::brake() {
     digitalWrite(directionPin2, LOW);
 }
 
-void Motor::clockwise() {
-    digitalWrite(directionPin1, HIGH);
-    digitalWrite(directionPin2, LOW);
-}
-
-void Motor::anticlockwise() {
-    digitalWrite(directionPin1, LOW);
-    digitalWrite(directionPin2, HIGH);
-}
-
 void Motor::setMotorDutyCycle(int speed) {
     int motorSpeed = abs((speed / 100.0) * 255);
-    if (speed > 0) anticlockwise(); else clockwise();
-    analogWrite(pwmPin, motorSpeed);
+    if (speed > 0) {
+        analogWrite(directionPin1, motorSpeed);
+        analogWrite(directionPin2, 0);
+    } else {
+        analogWrite(directionPin1, 0);
+        analogWrite(directionPin2, motorSpeed);
+    }
 }
 
 void Motor::setMotorRPM(int rpm, long dt) {
     float currentRPM = getRPM(dt);
-    if (rpm > 0) anticlockwise(); else clockwise();
-    analogWrite(pwmPin, -pidController.adjustmentValue(rpm, currentRPM));
+    if (rpm > 0) {
+        analogWrite(directionPin1, -pidController.adjustmentValue(rpm, currentRPM));
+        analogWrite(directionPin2, 0);
+    } else {
+        analogWrite(directionPin1, 0);
+        analogWrite(directionPin2, -pidController.adjustmentValue(rpm, currentRPM));
+    }
+    
 }

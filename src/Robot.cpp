@@ -2,18 +2,12 @@
 
 void Robot::run() {
     unsigned long now = millis();
-    float dt = (now - lastTime) / 1000.0f;
     // if (now - lastTime >= LOOP_TIME_MS) {
+    //     float dt = (now - lastTime) / 1000.0f;
+    //     lastTime = now;
+
     //     drive.motor1.setMotorRPM(100, dt);
+    //     LOG_PRINT("rpm", drive.motor1.angularVelocityRPM); LOG_NEXT;
     // }
-    drive.moveInDirection(0, 100);
-
-
-    if (colourSensor.detectedEdge()) {
-        Serial.println("Edge detected!");
-    }
-
-    // drive.moveInDirection(270, 0);
-    // odometry.updatePosition();
-    // LOG_PRINT("X", odometry.getX()); LOG_PRINT("Y", odometry.getY()); LOG_NEXT;
+    drive.motor1.setMotorDutyCycle(100);
 }

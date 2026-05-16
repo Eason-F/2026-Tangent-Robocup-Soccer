@@ -5,15 +5,13 @@
 
 class Motor {
     public:
-        const static int PULSE_PER_REVOLUTION = 442;
+        const static int PULSE_PER_REVOLUTION = 574;
 
-        int angularVelocityRPM;
-        long pulseCount;
-        long previousPulseCount = 0;
+        float angularVelocityRPM;
 
         Motor();
-        Motor(const int &pwmPin, const int &directionPin1, const int &directionPin2);
-        Motor(const int &pwmPin, const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController pidController);
+        Motor(const int &directionPin1, const int &directionPin2);
+        Motor(const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController &pidController);
 
         float getRPM(long dt);
 
@@ -21,16 +19,13 @@ class Motor {
         void setMotorRPM(int rpm, long dt);
 
         void brake();
-        void clockwise();
-        void anticlockwise();
 
     private: 
-        int pwmPin;
         int directionPin1;
         int directionPin2;
         int encoderPin1;
         int encoderPin2;
 
-        Encoder encoder = Encoder(99, 99);
+        Encoder encoder = Encoder(33, 34);
         PIDController pidController = PIDController(0, 0, 0);
 };

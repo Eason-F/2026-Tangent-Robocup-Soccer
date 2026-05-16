@@ -1,4 +1,4 @@
-#include "colour.hpp"
+#include <colour/colour.hpp>
 
 
 ColourSensor* ColourSensor::instance = nullptr;
