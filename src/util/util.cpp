@@ -14,6 +14,9 @@ float PIDController::adjustmentValue(float dt, float current, float target) {
     return value;
 };
 
+Vector::Vector() {
+}
+
 Vector::Vector(Position, const float &posX, const float &posY) {
     this-> x = posX;
     this-> y = posY;
