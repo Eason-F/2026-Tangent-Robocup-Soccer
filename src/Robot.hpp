@@ -9,8 +9,8 @@ class Robot {
     public:
         Button startButton;
         Drive drive;
-        OpticalOdometry odometry = OpticalOdometry(Wire);
-        QikEasy irSensor = QikEasy(Wire1);
+        // OpticalOdometry odometry = OpticalOdometry(Wire);
+        // QikEasy irSensor = QikEasy(Wire);
         
         void run();
 
