@@ -2,6 +2,7 @@
 #include <drive/Drive.hpp>
 
 Drive::Drive() {
+    analogWriteResolution(8);
     motor1 = Motor(DIRECTION_PIN1_1, DIRECTION_PIN2_1, ENCODER_PIN1_1, ENCODER_PIN2_1, pidController);
     motor2 = Motor(DIRECTION_PIN1_2, DIRECTION_PIN2_2, ENCODER_PIN1_2, ENCODER_PIN2_2, pidController);
     motor3 = Motor(DIRECTION_PIN1_3, DIRECTION_PIN2_3, ENCODER_PIN1_3, ENCODER_PIN2_3, pidController);

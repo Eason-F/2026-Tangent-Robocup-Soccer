@@ -32,7 +32,7 @@ class Drive {
         const int DIRECTION_PIN1_3 = 6;
         const int DIRECTION_PIN2_3 = 7;
         const int ENCODER_PIN1_3 = 37;
-        const int ENCODER_PIN2_3 = 37;
+        const int ENCODER_PIN2_3 = 32;
 
         const int DIRECTION_PIN1_4 = 8;
         const int DIRECTION_PIN2_4 = 9;

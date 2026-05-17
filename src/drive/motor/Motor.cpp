@@ -28,11 +28,13 @@ Motor::Motor(const int &directionPin1, const int &directionPin2,  const int &enc
 
     pinMode(directionPin1, OUTPUT);
     pinMode(directionPin2, OUTPUT);
+    analogWriteFrequency(directionPin1, 20000);
+    analogWriteFrequency(directionPin2, 20000);
 
     setMotorDutyCycle(0);
 }
 
-float Motor::getRPM(long dt) {
+float Motor::getRPM(float dt) {
     long delta = encoder.readAndReset();
     LOG_PRINT("count", delta);
     angularVelocityRPM = (delta / (float)PULSE_PER_REVOLUTION) * (60.0 / dt);
@@ -58,11 +60,11 @@ void Motor::setMotorDutyCycle(int speed) {
 void Motor::setMotorRPM(int rpm, long dt) {
     float currentRPM = getRPM(dt);
     if (rpm > 0) {
-        analogWrite(directionPin1, -pidController.adjustmentValue(rpm, currentRPM));
+        analogWrite(directionPin1, pidController.adjustmentValue(rpm, currentRPM));
         analogWrite(directionPin2, 0);
     } else {
         analogWrite(directionPin1, 0);
-        analogWrite(directionPin2, -pidController.adjustmentValue(rpm, currentRPM));
+        analogWrite(directionPin2, pidController.adjustmentValue(rpm, currentRPM));
     }
     
 }
