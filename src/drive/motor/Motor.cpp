@@ -45,9 +45,11 @@ void Motor::setMotorDutyCycle(int speed) {
     if (speed > 0) {
         analogWrite(directionPin1, motorSpeed);
         analogWrite(directionPin2, 0);
-    } else {
+    } else if (speed < 0) {
         analogWrite(directionPin1, 0);
         analogWrite(directionPin2, motorSpeed);
+    } else {
+        brake();
     }
 }
 
@@ -56,9 +58,10 @@ void Motor::setMotorRPM(int rpm, float dt) {
     if (rpm > 0) {
         analogWrite(directionPin1, pidController->adjustmentValue(dt, rpm, currentRPM));
         analogWrite(directionPin2, 0);
-    } else {
+    } else if (rpm < 0) {
         analogWrite(directionPin1, 0);
         analogWrite(directionPin2, pidController->adjustmentValue(dt, rpm, currentRPM));
+    } else {
+        brake();
     }
-    
 }
