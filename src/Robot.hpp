@@ -2,7 +2,6 @@
 
 #include <drive/Drive.hpp>
 #include <odometry/Odometry.hpp>
-#include <colour/colour.hpp>
 #include <util/util.hpp>
 #include <util/button.hpp>
 
@@ -10,13 +9,13 @@ class Robot {
     public:
         Button startButton;
         Drive drive;
-        // Drive drive;
-        ColourSensor colourSensor = ColourSensor(20);
+        // ColourSensor colourSensor = ColourSensor(20);
         // OpticalOdometry odometry = OpticalOdometry(Wire);
         
+        void setup();
         void run();
 
     private:
-        const uint LOOP_TIME_MS = 50;
+        const uint LOOP_TIME_MS = 100;
         unsigned long lastTime = millis();
 };
