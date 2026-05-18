@@ -10,12 +10,12 @@ class Drive {
         Motor motor3;
         Motor motor4;
 
-        PIDController pidController = PIDController(1, 0, 0);
+        PIDController pidController = PIDController(1, 0, 0, 0, 255);
 
         Drive();
+        void setup();
 
         void moveInDirection(int directionDegrees, int speed);
-
         void turnInDirection(int direction, int speed);
 
     private: 

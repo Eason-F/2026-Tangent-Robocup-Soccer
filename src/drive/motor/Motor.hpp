@@ -1,6 +1,7 @@
 #pragma once
 #define ENCODER_USE_INTERRUPTS
 
+#include <memory>
 #include <util/util.hpp>
 #include <Encoder.h>
 
@@ -12,21 +13,22 @@ class Motor {
 
         Motor();
         Motor(const int &directionPin1, const int &directionPin2);
-        Motor(const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController &pidController);
+        Motor(const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController *pidController);
+        void setup();
 
         float getRPM(float dt);
 
         void setMotorDutyCycle(int speed);
-        void setMotorRPM(int rpm, long dt);
+        void setMotorRPM(int rpm, float dt);
 
         void brake();
 
     private: 
-        int directionPin1;
-        int directionPin2;
-        int encoderPin1;
-        int encoderPin2;
+        const int directionPin1;
+        const int directionPin2;
+        const int encoderPin1;
+        const int encoderPin2;
 
-        Encoder encoder = Encoder(33, 34);
-        PIDController pidController = PIDController(0, 0, 0);
+        Encoder *encoder = nullptr;
+        PIDController *pidController = nullptr;
 };

@@ -1,24 +1,13 @@
 #include <util/util.hpp>
 
-PIDController::PIDValues::PIDValues(const float &kP, const float &kI, const float &kD) {
-    this-> kP = kP;
-    this-> kI = kI;
-    this-> kD = kD;
-}
+PIDController::PIDController(const float &kP, const float &kI, const float &kD, const float &min, const float &max) : 
+    kP(kP), kI(kI), kD(kD), 
+    max(max), min(min) {}
 
-PIDController::PIDController() {};
-
-PIDController::PIDController(const float &kP, const float &kI, const float &kD) {
-    pidValues.kP = kP;
-    pidValues.kI = kI;
-    pidValues.kD = kD;
-};
-
-PIDController::PIDController(PIDValues pidValues) {
-    this-> pidValues = pidValues;
-};
-
-float PIDController::adjustmentValue(float current, float target) {
+float PIDController::adjustmentValue(float dt, float current, float target) {
     float error = target - current;
-    return error * pidValues.kP;
+    float derivative = (error - lastError) / dt;
+    value += kP * error + kI * integral + kD * derivative;
+    lastError = error;
+    return constrain(value, min, max);
 };

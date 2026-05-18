@@ -12,6 +12,7 @@ class Robot {
         // ColourSensor colourSensor = ColourSensor(20);
         // OpticalOdometry odometry = OpticalOdometry(Wire);
         
+        void setup();
         void run();
 
     private:
