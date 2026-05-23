@@ -2,33 +2,42 @@
 
 #include <drive/motor/Motor.hpp>
 
-Motor::Motor() : directionPin1(-1), directionPin2(-1), encoderPin1(-1), encoderPin2(-1) {}
+Motor::~Motor() {
+    delete encoder;
+}
 
 Motor::Motor(const int &directionPin1, const int &directionPin2) : 
-    directionPin1(directionPin1), 
-    directionPin2(directionPin2), 
-    encoderPin1(-1), encoderPin2(-1) {}
+    DIRECTION_PIN1(directionPin1), 
+    DIRECTION_PIN2(directionPin2), 
+    ENCODER_PIN1(-1), ENCODER_PIN2(-1), 
+    encoder(nullptr), pidController(nullptr) {}
 
 Motor::Motor(const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController *pidController) :
-    directionPin1(directionPin1),
-    directionPin2(directionPin2),
-    encoderPin1(encoderPin1),
-    encoderPin2(encoderPin2),
+    DIRECTION_PIN1(directionPin1),
+    DIRECTION_PIN2(directionPin2),
+    ENCODER_PIN1(encoderPin1),
+    ENCODER_PIN2(encoderPin2),
+    encoder(nullptr),
     pidController(pidController) {}
 
 void Motor::setup() {
-    pinMode(directionPin1, OUTPUT);
-    pinMode(directionPin2, OUTPUT);
-    analogWriteFrequency(directionPin1, 20000);
-    analogWriteFrequency(directionPin2, 20000);
+    pinMode(DIRECTION_PIN1, OUTPUT);
+    pinMode(DIRECTION_PIN2, OUTPUT);
+    analogWriteFrequency(DIRECTION_PIN1, 20000);
+    analogWriteFrequency(DIRECTION_PIN2, 20000);
 
-    if ((encoderPin1 > 0 && encoderPin2 > 0) && (encoder == nullptr)) {
-        encoder = new Encoder(encoderPin1, encoderPin2);
+    LOG_PRINT(ENCODER_PIN1); LOG_PRINT(ENCODER_PIN2);
+    if ((ENCODER_PIN1 > 0 && ENCODER_PIN2 > 0) && (encoder == nullptr)) {
+        encoder = new Encoder(ENCODER_PIN1, ENCODER_PIN2);
     }
+    Serial.println((uint32_t)encoder, HEX);
     brake();
 }
 
 float Motor::getRPM(float dt) {
+    if (encoder == nullptr || dt <= 0.0f)
+        return 0.0f;
+
     long delta = encoder-> readAndReset();
     LOG("count", delta);
     angularVelocityRPM = (delta / (float)PULSE_PER_REVOLUTION) * (60.0 / dt);
@@ -36,31 +45,34 @@ float Motor::getRPM(float dt) {
 };
 
 void Motor::brake() {
-    analogWrite(directionPin1, LOW);
-    analogWrite(directionPin2, LOW);
+    analogWrite(DIRECTION_PIN1, LOW);
+    analogWrite(DIRECTION_PIN2, LOW);
 }
 
 void Motor::setMotorDutyCycle(int speed) {
     int motorSpeed = abs((speed / 100.0) * 255);
     if (speed > 0) {
-        analogWrite(directionPin1, motorSpeed);
-        analogWrite(directionPin2, 0);
+        analogWrite(DIRECTION_PIN1, motorSpeed);
+        analogWrite(DIRECTION_PIN2, 0);
     } else if (speed < 0) {
-        analogWrite(directionPin1, 0);
-        analogWrite(directionPin2, motorSpeed);
+        analogWrite(DIRECTION_PIN1, 0);
+        analogWrite(DIRECTION_PIN2, motorSpeed);
     } else {
         brake();
     }
 }
 
 void Motor::setMotorRPM(int rpm, float dt) {
+    if (pidController == nullptr)
+        return;
+
     float currentRPM = getRPM(dt);
-    if (rpm > 0) {
-        analogWrite(directionPin1, (int) pidController->adjustmentValue(dt, rpm, currentRPM));
-        analogWrite(directionPin2, 0);
-    } else if (rpm < 0) {
-        analogWrite(directionPin1, 0);
-        analogWrite(directionPin2, (int) pidController->adjustmentValue(dt, rpm, currentRPM));
+    if (rpm < 0) {
+        analogWrite(DIRECTION_PIN1, (int) pidController->adjustmentValue(dt, currentRPM, rpm));
+        analogWrite(DIRECTION_PIN2, 0);
+    } else if (rpm > 0) {
+        analogWrite(DIRECTION_PIN1, 0);
+        analogWrite(DIRECTION_PIN2, (int) pidController->adjustmentValue(dt, currentRPM, rpm));
     } else {
         brake();
     }

@@ -1,17 +1,15 @@
 #pragma once
-#define ENCODER_USE_INTERRUPTS
 
-#include <memory>
 #include <util/util.hpp>
 #include <Encoder.h>
 
 class Motor {
     public:
-        const static int PULSE_PER_REVOLUTION = 574;
+        static constexpr int PULSE_PER_REVOLUTION = 1600;
 
         float angularVelocityRPM;
 
-        Motor();
+        ~Motor();
         Motor(const int &directionPin1, const int &directionPin2);
         Motor(const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController *pidController);
         void setup();
@@ -24,10 +22,10 @@ class Motor {
         void brake();
 
     private: 
-        const int directionPin1;
-        const int directionPin2;
-        const int encoderPin1;
-        const int encoderPin2;
+        const int DIRECTION_PIN1;
+        const int DIRECTION_PIN2;
+        const int ENCODER_PIN1;
+        const int ENCODER_PIN2;
 
         Encoder *encoder = nullptr;
         PIDController *pidController = nullptr;
