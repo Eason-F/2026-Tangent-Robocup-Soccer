@@ -27,7 +27,7 @@ class Drive {
         void setup();
 
         void update(float dt);
-        void moveInDirection(int directionDegrees, int speed);
+        void moveInDirection(float dt, int directionDegrees, int rpm);
         void turnInDirection(int direction, int speed);
 
     private: 

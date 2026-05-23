@@ -15,9 +15,9 @@ void Drive::setup() {
     motor4.setup();
 }
 
-void Drive::moveInDirection(int directionDegrees, int speed) {
-    motor1.setMotorDutyCycle(cos(radians(directionDegrees + 315)) * speed);
-    motor2.setMotorDutyCycle(cos(radians(directionDegrees + 225)) * speed);
-    motor3.setMotorDutyCycle(cos(radians(directionDegrees + 45)) * speed);
-    motor4.setMotorDutyCycle(cos(radians(directionDegrees + 135)) * speed);
+void Drive::moveInDirection(float dt, int directionDegrees, int rpm) {
+    motor1.setMotorRPM(cos(radians(directionDegrees + 315)) * rpm, dt);
+    motor2.setMotorRPM(cos(radians(directionDegrees + 225)) * rpm, dt);
+    motor3.setMotorRPM(cos(radians(directionDegrees + 45)) * rpm, dt);
+    motor4.setMotorRPM(cos(radians(directionDegrees + 135)) * rpm, dt);
 }
