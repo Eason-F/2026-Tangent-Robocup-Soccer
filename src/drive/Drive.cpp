@@ -21,3 +21,10 @@ void Drive::moveInDirection(float dt, int directionDegrees, int rpm) {
     motor3.setMotorRPM(cos(radians(directionDegrees + 45)) * rpm, dt);
     motor4.setMotorRPM(cos(radians(directionDegrees + 135)) * rpm, dt);
 }
+
+void Drive::stop() {
+    motor1.brake();
+    motor2.brake();
+    motor3.brake();
+    motor4.brake();
+}
