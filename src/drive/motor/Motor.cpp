@@ -66,13 +66,13 @@ void Motor::setMotorRPM(int rpm, float dt) {
     if (pidController == nullptr)
         return;
 
-    float currentRPM = getRPM(dt);
+    float currentRPM = abs(getRPM(dt));
     if (rpm < 0) {
-        analogWrite(DIRECTION_PIN1, (int) pidController->adjustmentValue(dt, currentRPM, rpm));
+        analogWrite(DIRECTION_PIN1, (int) pidController->adjustmentValue(dt, currentRPM, abs(rpm)));
         analogWrite(DIRECTION_PIN2, 0);
     } else if (rpm > 0) {
         analogWrite(DIRECTION_PIN1, 0);
-        analogWrite(DIRECTION_PIN2, (int) pidController->adjustmentValue(dt, currentRPM, rpm));
+        analogWrite(DIRECTION_PIN2, (int) pidController->adjustmentValue(dt, currentRPM, abs(rpm)));
     } else {
         brake();
     }
