@@ -45,8 +45,8 @@ float Motor::getRPM(float dt) {
 };
 
 void Motor::brake() {
-    analogWrite(DIRECTION_PIN1, LOW);
-    analogWrite(DIRECTION_PIN2, LOW);
+    analogWrite(DIRECTION_PIN1, 0);
+    analogWrite(DIRECTION_PIN2, 0);
 }
 
 void Motor::setMotorDutyCycle(int speed) {
