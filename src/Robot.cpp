@@ -19,19 +19,17 @@ void Robot::setup() {
 }
 
 void Robot::run() {
-    // LOG("button", button.isPressed()); LOG_NEXT;
+    irSensor.updateReadings();
     if (button.isPressed()) {
         unsigned long now = millis();
         if (now - lastTime >= LOOP_TIME_MS) {
             float dt = (now - lastTime) / 1000.0f;
             lastTime = now;
 
-            drive.moveInDirection(dt, 0, 1000);
+            drive.moveInDirection(dt, degrees(irSensor.signalVec.angle), 1000);
         }
     } else {
         drive.stop();
     }
-    irSensor.updateReadings();
     LOG("IR", degrees(irSensor.signalVec.angle)); LOG_NEXT;
-    delay(100);
 }
