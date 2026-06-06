@@ -21,7 +21,7 @@ uint16_t QikEasy::signalStrength(const int &receiverID) {
         strength = wirePort.read() << 8;
         strength |= wirePort.read();
     }
-    LOG(receiverID - 2, strength);
+    // LOG(receiverID - 2, strength);
     return strength;
 }
 
