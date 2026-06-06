@@ -20,7 +20,7 @@ Vector::Vector() {
 Vector::Vector(Position, const float &posX, const float &posY) {
     this-> x = posX;
     this-> y = posY;
-    angle = acos(posY / posX);
+    angle = atan2(posY, posX);
     length = sqrt(pow(posX, 2) + pow(posY, 2));
 }
 
