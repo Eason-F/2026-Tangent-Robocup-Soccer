@@ -10,9 +10,12 @@ bool Button::isPressed() {
     return !digitalRead(buttonPin);
 }
 
+Robot::Robot() : button(41), irSensor(Wire2) {}
+
 void Robot::setup() {
     button.setup();
     drive.setup();
+    irSensor.setup();
 }
 
 void Robot::run() {
@@ -28,4 +31,7 @@ void Robot::run() {
     } else {
         drive.stop();
     }
+    irSensor.updateReadings();
+    LOG("IR", degrees(irSensor.signalVec.angle)); LOG_NEXT;
+    delay(100);
 }
