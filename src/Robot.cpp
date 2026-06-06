@@ -10,12 +10,13 @@ bool Button::isPressed() {
     return !digitalRead(buttonPin);
 }
 
-Robot::Robot() : button(41), irSensor(Wire2) {}
+Robot::Robot() : button(41), irSensor(Wire2), imu(Wire2, 0x28) {}
 
 void Robot::setup() {
     button.setup();
     drive.setup();
     irSensor.setup();
+    imu.setup();
 }
 
 void Robot::run() {
@@ -31,5 +32,6 @@ void Robot::run() {
     } else {
         drive.stop();
     }
-    LOG("IR", degrees(irSensor.signalVec.angle)); LOG_NEXT;
+    // LOG("IR", degrees(irSensor.signalVec.angle)); LOG_NEXT;
+    LOG("IMU", imu.getYaw()); LOG_NEXT;
 }
