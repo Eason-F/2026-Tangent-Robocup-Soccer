@@ -1,11 +1,11 @@
 #include <imu/imu.hpp>
 
-IMU::IMU(TwoWire &wirePort, const uint8_t &address)
-    : wirePort(&wirePort), bno(SENSOR_ID, address, &wirePort) {}
+IMU::IMU(TwoWire &wirePort)
+    : wirePort(wirePort), bno(SENSOR_ID, BNO055_ADDRESS_A, &wirePort) {}
 
 bool IMU::setup() {
-    wirePort->begin();
-    wirePort->setClock(I2C_CLOCK);
+    wirePort.begin();
+    wirePort.setClock(I2C_CLOCK);
 
     connected = bno.begin();
     if (!connected) {
@@ -15,35 +15,27 @@ bool IMU::setup() {
 
     delay(50);
     bno.setExtCrystalUse(true);
-    update();
-
+    updateReadings();
     return true;
 }
 
-void IMU::update() {
+void IMU::updateReadings() {
     if (!connected) {
         return;
     }
 
-    imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
-    yaw = euler.x();
+    imu::Vector<3> vector = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
+    yaw = vector.x();
 }
 
 float IMU::getYaw() {
-    update();
+    updateReadings();
     return yaw;
-}
-
-bool IMU::isConnected() {
-    return connected;
 }
 
 void IMU::getCalibration(uint8_t &system, uint8_t &gyro, uint8_t &accel, uint8_t &mag) {
     if (!connected) {
-        system = 0;
-        gyro = 0;
-        accel = 0;
-        mag = 0;
+        system = gyro = accel = mag = 0;
         return;
     }
 

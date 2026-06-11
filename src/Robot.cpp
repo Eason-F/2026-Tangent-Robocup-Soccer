@@ -10,7 +10,7 @@ bool Button::isPressed() {
     return !digitalRead(buttonPin);
 }
 
-Robot::Robot() : button(41), irSensor(Wire2), imu(Wire2, 0x28) {}
+Robot::Robot() : button(41), irSensor(Wire2), imu(Wire2) {}
 
 void Robot::setup() {
     button.setup();
@@ -27,7 +27,7 @@ void Robot::run() {
             float dt = (now - lastTime) / 1000.0f;
             lastTime = now;
 
-            drive.moveInDirection(dt, degrees(irSensor.signalVec.angle), 1000);
+            drive.moveInDirection(dt, irSensor.signalVec.angle, 500, imu.getYaw());
         }
     } else {
         drive.stop();

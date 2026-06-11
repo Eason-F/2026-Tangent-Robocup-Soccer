@@ -26,9 +26,9 @@ class Drive {
         Drive();
         void setup();
 
-        void update(float dt);
-        void moveInDirection(float dt, int directionDegrees, int rpm);
-        void turnInDirection(int direction, int speed);
+        void update(const float& dt);
+        void moveInDirection(const float &dt, const int &direction, const int &rpm, const float &heading);
+        void turnInDirection(const float &dt, const int &rpm);
         void stop();
 
     private: 
@@ -52,4 +52,6 @@ class Drive {
         static constexpr int ENCODER_PIN1_4 = 39;
         static constexpr int ENCODER_PIN2_4 = 40;
 
+        static constexpr float HEADING_MULT = 1;
+        static float motorSpeedAtAngle(const float &movementDirection, const float &offsetAngle);
 };
