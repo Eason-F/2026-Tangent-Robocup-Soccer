@@ -16,15 +16,15 @@ void Drive::setup() {
 }
 
 float Drive::motorSpeedAtAngle(const float &movementDirection, const float &offsetAngle) {
-    return cos(radians(movementDirection + offsetAngle));
+    return cos(movementDirection + radians(offsetAngle));
 }
 
 void Drive::moveInDirection(const float &dt, const int &directionDegrees, const int &rpm, const float &heading) {
     int headingAdjustment = heading * HEADING_MULT;
-    motor1.setMotorRPM(motorSpeedAtAngle(directionDegrees, -45) * rpm + headingAdjustment, dt);
-    motor2.setMotorRPM(motorSpeedAtAngle(directionDegrees, 45) * rpm + headingAdjustment, dt);
-    motor3.setMotorRPM(motorSpeedAtAngle(directionDegrees, -135) * rpm + headingAdjustment, dt);
-    motor4.setMotorRPM(motorSpeedAtAngle(directionDegrees, 135) * rpm + headingAdjustment, dt);
+    motor1.setMotorRPM(motorSpeedAtAngle(directionDegrees, 315) * rpm - headingAdjustment, dt);
+    motor2.setMotorRPM(motorSpeedAtAngle(directionDegrees, 225) * rpm - headingAdjustment, dt);
+    motor3.setMotorRPM(motorSpeedAtAngle(directionDegrees, 45) * rpm - headingAdjustment, dt);
+    motor4.setMotorRPM(motorSpeedAtAngle(directionDegrees, 135) * rpm - headingAdjustment, dt);
 }
 
 void Drive::turnInDirection(const float &dt, const int &rpm) {

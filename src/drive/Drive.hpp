@@ -52,6 +52,6 @@ class Drive {
         static constexpr int ENCODER_PIN1_4 = 39;
         static constexpr int ENCODER_PIN2_4 = 40;
 
-        static constexpr float HEADING_MULT = 1;
+        static constexpr float HEADING_MULT = 2.0;
         static float motorSpeedAtAngle(const float &movementDirection, const float &offsetAngle);
 };

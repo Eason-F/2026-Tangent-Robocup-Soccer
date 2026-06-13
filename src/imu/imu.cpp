@@ -1,22 +1,20 @@
 #include <imu/imu.hpp>
 
 IMU::IMU(TwoWire &wirePort)
-    : wirePort(wirePort), bno(SENSOR_ID, BNO055_ADDRESS_A, &wirePort) {}
+    : wirePort(wirePort), sensor(SENSOR_ID, BNO055_ADDRESS_A, &wirePort) {}
 
-bool IMU::setup() {
+void IMU::setup() {
     wirePort.begin();
     wirePort.setClock(I2C_CLOCK);
 
-    connected = bno.begin();
+    connected = sensor.begin();
     if (!connected) {
         Serial.println("BNO055 not detected");
-        return false;
     }
 
     delay(50);
-    bno.setExtCrystalUse(true);
+    sensor.setExtCrystalUse(true);
     updateReadings();
-    return true;
 }
 
 void IMU::updateReadings() {
@@ -24,8 +22,11 @@ void IMU::updateReadings() {
         return;
     }
 
-    imu::Vector<3> vector = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
+    imu::Vector<3> vector = sensor.getVector(Adafruit_BNO055::VECTOR_EULER);
     yaw = vector.x();
+    if (yaw > 180) {
+        yaw -= 360;
+    }
 }
 
 float IMU::getYaw() {
@@ -39,5 +40,5 @@ void IMU::getCalibration(uint8_t &system, uint8_t &gyro, uint8_t &accel, uint8_t
         return;
     }
 
-    bno.getCalibration(&system, &gyro, &accel, &mag);
+    sensor.getCalibration(&system, &gyro, &accel, &mag);
 }

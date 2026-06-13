@@ -27,11 +27,12 @@ void Robot::run() {
             float dt = (now - lastTime) / 1000.0f;
             lastTime = now;
 
-            drive.moveInDirection(dt, irSensor.signalVec.angle, 500, imu.getYaw());
+            drive.moveInDirection(dt, irSensor.signalVec.angle, 150, imu.getYaw());
+            // drive.turnInDirection(dt, 150);
         }
     } else {
         drive.stop();
     }
-    // LOG("IR", degrees(irSensor.signalVec.angle)); LOG_NEXT;
+    LOG("IR", degrees(irSensor.signalVec.angle));
     LOG("IMU", imu.getYaw()); LOG_NEXT;
 }

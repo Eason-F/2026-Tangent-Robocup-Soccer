@@ -2,6 +2,7 @@
 
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
+
 #include <Arduino.h>
 #include <Wire.h>
 
@@ -9,7 +10,7 @@ class IMU {
     public:
         IMU(TwoWire &wirePort);
 
-        bool setup();
+        void setup();
         void updateReadings();
 
         float getYaw();
@@ -24,5 +25,5 @@ class IMU {
         static constexpr uint8_t address = 0x28;
 
         TwoWire &wirePort;
-        Adafruit_BNO055 bno;
+        Adafruit_BNO055 sensor;
 };

@@ -39,7 +39,6 @@ float Motor::getRPM(float dt) {
         return 0.0f;
 
     long delta = encoder-> readAndReset();
-    LOG("count", delta);
     angularVelocityRPM = (delta / (float)PULSE_PER_REVOLUTION) * (60.0 / dt);
     return angularVelocityRPM;
 };
