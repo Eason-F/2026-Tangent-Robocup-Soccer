@@ -3,17 +3,22 @@
 #include <drive/Drive.hpp>
 #include <odometry/Odometry.hpp>
 #include <qikeasy/QikEasy.hpp>
+#include <imu/imu.hpp>
 #include <util/util.hpp>
+
 
 class Button {
     private:
         const int buttonPin;
+        bool state;
+        bool previousState;
 
     public:
         Button(const int &pin);
         void setup();
 
         bool isPressed();
+        bool justPressed();
 };
 
 class Robot {
@@ -30,6 +35,7 @@ class Robot {
         Button button;
         QikEasy irSensor;
         Drive drive;
+        IMU imu;
         // ColourSensor colourSensor = ColourSensor(20);
         // OpticalOdometry odometry = OpticalOdometry(Wire);
 };

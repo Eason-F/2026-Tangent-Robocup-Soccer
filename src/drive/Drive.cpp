@@ -15,11 +15,23 @@ void Drive::setup() {
     motor4.setup();
 }
 
-void Drive::moveInDirection(float dt, int directionDegrees, int rpm) {
-    motor1.setMotorRPM(cos(radians(directionDegrees + 315)) * rpm, dt);
-    motor2.setMotorRPM(cos(radians(directionDegrees + 225)) * rpm, dt);
-    motor3.setMotorRPM(cos(radians(directionDegrees + 45)) * rpm, dt);
-    motor4.setMotorRPM(cos(radians(directionDegrees + 135)) * rpm, dt);
+float Drive::motorSpeedAtAngle(const float &movementDirection, const float &offsetAngle) {
+    return cos(movementDirection + radians(offsetAngle));
+}
+
+void Drive::moveInDirection(const float &dt, const int &directionDegrees, const int &rpm, const float &heading) {
+    int headingAdjustment = heading * HEADING_MULT;
+    motor1.setMotorRPM(motorSpeedAtAngle(directionDegrees, 315) * rpm - headingAdjustment, dt);
+    motor2.setMotorRPM(motorSpeedAtAngle(directionDegrees, 225) * rpm - headingAdjustment, dt);
+    motor3.setMotorRPM(motorSpeedAtAngle(directionDegrees, 45) * rpm - headingAdjustment, dt);
+    motor4.setMotorRPM(motorSpeedAtAngle(directionDegrees, 135) * rpm - headingAdjustment, dt);
+}
+
+void Drive::turnInDirection(const float &dt, const int &rpm) {
+    motor1.setMotorRPM(rpm, dt);
+    motor2.setMotorRPM(rpm, dt);
+    motor3.setMotorRPM(rpm, dt);
+    motor4.setMotorRPM(rpm, dt);
 }
 
 void Drive::stop() {

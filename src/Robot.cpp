@@ -7,29 +7,43 @@ void Button::setup() {
 }
 
 bool Button::isPressed() {
-    return !digitalRead(buttonPin);
+    previousState = state;
+    state = !digitalRead(buttonPin);
+    return state;
 }
 
-Robot::Robot() : button(41), irSensor(Wire2) {}
+bool Button::justPressed() {
+    return previousState != state;
+}
+
+Robot::Robot() : button(41), irSensor(Wire2), imu(Wire2) {}
 
 void Robot::setup() {
     button.setup();
     drive.setup();
     irSensor.setup();
+    imu.setup();
 }
 
 void Robot::run() {
     irSensor.updateReadings();
+    imu.updateReadings();
+    if (button.justPressed()) {
+    }
+    
     if (button.isPressed()) {
         unsigned long now = millis();
         if (now - lastTime >= LOOP_TIME_MS) {
             float dt = (now - lastTime) / 1000.0f;
             lastTime = now;
 
-            drive.moveInDirection(dt, degrees(irSensor.signalVec.angle), 1000);
+            drive.moveInDirection(dt, irSensor.signalVec.angle, 200, imu.getYaw());
+            // drive.turnInDirection(dt, 150);
         }
     } else {
         drive.stop();
+        imu.resetOffsets();
     }
-    LOG("IR", degrees(irSensor.signalVec.angle)); LOG_NEXT;
+    LOG("IR", degrees(irSensor.signalVec.angle));
+    LOG("IMU", imu.getYaw()); LOG_NEXT;
 }
