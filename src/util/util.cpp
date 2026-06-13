@@ -10,7 +10,7 @@ float PIDController::adjustmentValue(float dt, float current, float target) {
     value += kP * error + kI * integral + kD * derivative;
     value = constrain(value, min, max);
     lastError = error;
-    LOG("pid value", value);
+    // LOG("pid value", value);
     return value;
 };
 

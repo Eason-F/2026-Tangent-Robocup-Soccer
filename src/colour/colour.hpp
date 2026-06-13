@@ -8,11 +8,10 @@ class ColourSensor{
         bool detectedEdge();
 
     private:
-        static ColourSensor* ColourSensor::instance;
-        volatile bool onField;
-        static void ColourSensor::interruptWrapper();
+        static ColourSensor* instance;
+        volatile bool onField = false;
+        static void interruptWrapper();
         void onFallingEdge();
 
 };
-
 

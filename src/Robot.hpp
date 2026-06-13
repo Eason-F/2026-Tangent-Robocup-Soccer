@@ -5,6 +5,7 @@
 #include <qikeasy/QikEasy.hpp>
 #include <imu/imu.hpp>
 #include <util/util.hpp>
+#include <colour/colour.hpp>
 
 
 class Button {
@@ -28,11 +29,12 @@ class Robot {
     private:
         static constexpr uint LOOP_TIME_MS = 100;
         unsigned long lastTime = millis();
+        unsigned int lastDirection = 0;
 
         Button button;
         QikEasy irSensor;
         Drive drive;
         IMU imu;
-        // ColourSensor colourSensor = ColourSensor(20);
+        ColourSensor colourSensor;
         // OpticalOdometry odometry = OpticalOdometry(Wire);
 };
