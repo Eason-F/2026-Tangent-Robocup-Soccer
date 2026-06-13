@@ -13,11 +13,10 @@ class IMU {
         void setup();
         void updateReadings();
 
-        float getYaw();
         void getCalibration(uint8_t &system, uint8_t &gyro, uint8_t &accel, uint8_t &mag);
+        void resetOffsets();
 
-        float yaw, pitch, roll;
-        bool connected;
+        float getYaw();
 
     private:
         static constexpr int32_t SENSOR_ID = 55;
@@ -25,5 +24,8 @@ class IMU {
         static constexpr uint8_t address = 0x28;
 
         TwoWire &wirePort;
-        Adafruit_BNO055 sensor;
+        Adafruit_BNO055 bno;
+        float headingOffset;
+
+        float yaw, pitch, roll = 0;
 };

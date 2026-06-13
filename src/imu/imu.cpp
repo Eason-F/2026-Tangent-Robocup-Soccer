@@ -1,44 +1,37 @@
 #include <imu/imu.hpp>
 
 IMU::IMU(TwoWire &wirePort)
-    : wirePort(wirePort), sensor(SENSOR_ID, BNO055_ADDRESS_A, &wirePort) {}
+    : wirePort(wirePort), bno(SENSOR_ID, BNO055_ADDRESS_A, &wirePort) {}
 
 void IMU::setup() {
     wirePort.begin();
     wirePort.setClock(I2C_CLOCK);
 
-    connected = sensor.begin();
-    if (!connected) {
+    if (!bno.begin()) {
         Serial.println("BNO055 not detected");
     }
 
-    delay(50);
-    sensor.setExtCrystalUse(true);
+    bno.setExtCrystalUse(true);
     updateReadings();
-}
-
-void IMU::updateReadings() {
-    if (!connected) {
-        return;
-    }
-
-    imu::Vector<3> vector = sensor.getVector(Adafruit_BNO055::VECTOR_EULER);
-    yaw = vector.x();
-    if (yaw > 180) {
-        yaw -= 360;
-    }
-}
-
-float IMU::getYaw() {
-    updateReadings();
-    return yaw;
 }
 
 void IMU::getCalibration(uint8_t &system, uint8_t &gyro, uint8_t &accel, uint8_t &mag) {
-    if (!connected) {
-        system = gyro = accel = mag = 0;
-        return;
-    }
+    bno.getCalibration(&system, &gyro, &accel, &mag);
+    //do something with data
+}
 
-    sensor.getCalibration(&system, &gyro, &accel, &mag);
+void IMU::resetOffsets() {
+    headingOffset = yaw;
+}
+
+void IMU::updateReadings() {
+    imu::Vector<3> vector = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
+    yaw = vector.x();
+    roll = vector.y();
+    pitch = vector.z();
+}
+
+float IMU::getYaw() {
+    float actual = yaw - headingOffset;
+    return (actual > 180) ? actual - 360 : actual;
 }
