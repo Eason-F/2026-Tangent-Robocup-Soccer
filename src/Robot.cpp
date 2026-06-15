@@ -23,21 +23,33 @@ void Robot::run() {
     irSensor.updateReadings();
     if (button.isPressed()) {
         unsigned long now = millis();
-        if (now - lastTime >= LOOP_TIME_MS) {
-            float dt = (now - lastTime) / 1000.0f;
-            lastTime = now;
-
-            drive.moveInDirection(dt, 0, 30);
-            lastDirection = degrees(irSensor.signalVec.angle);
+        if (justOn) {
+            justOn = false;
+            drive.moveInDirection(0.5, 0, 400);
+            delay(1000);
+            return;
         }
         if (colourSensor.detectedEdge()) {
+            drive.stop();
             LOG("Colour sensor detected HIGH", true); LOG_NEXT;
-            drive.moveInDirection(0.5, 180, 30);
-            delay(1500);
-            // drive.moveInDirection(0.5, lastDirection-180, 1000);
+            delay(3000);
+
+            // drive.moveInDirection(0.5, degrees(irSensor.signalVec.angle)-180, 80);
+            // LOG("IR Heading:", degrees(irSensor.signalVec.angle)); LOG_NEXT;    
+            // delay(300);
+        } else if (now - lastTime >= LOOP_TIME_MS) {
+            float dt = (now - lastTime) / 1000.0f;
+            lastTime = now;
+            // drive.moveInDirection(dt, 0, 500);
+            drive.moveInDirection(dt, degrees(irSensor.signalVec.angle), 200);
+            lastDirection = degrees(irSensor.signalVec.angle);
+            // LOG("IR Heading:", degrees(irSensor.signalVec.angle)); LOG_NEXT;    
+
         }
+            
     } else {
         drive.stop();
+        justOn = true;
     }
     // LOG("IR", degrees(irSensor.signalVec.angle)); LOG_NEXT;
     // LOG("IMU", imu.getYaw()); LOG_NEXT;

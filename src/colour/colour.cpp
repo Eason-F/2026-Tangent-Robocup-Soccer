@@ -7,7 +7,6 @@ void ColourSensor::onFallingEdge() {
     onField = true;
 }
 
-
 ColourSensor::ColourSensor(const int &pin) {
     instance = this;
     pinMode(pin, INPUT_PULLUP);
@@ -27,3 +26,4 @@ bool ColourSensor::detectedEdge() {
     }
     return false;
 }
+

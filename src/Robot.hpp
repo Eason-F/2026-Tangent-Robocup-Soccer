@@ -31,6 +31,9 @@ class Robot {
         unsigned long lastTime = millis();
         unsigned int lastDirection = 0;
 
+        void handleColourSensor();
+
+        bool justOn = false;
         Button button;
         QikEasy irSensor;
         Drive drive;
