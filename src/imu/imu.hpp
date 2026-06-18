@@ -13,6 +13,8 @@ class IMU {
         void update();
 
         float getYaw();
+        float getRelativeYaw();
+        void resetYawOrigin();
         bool isConnected();
         void getCalibration(uint8_t &system, uint8_t &gyro, uint8_t &accel, uint8_t &mag);
 
@@ -23,5 +25,8 @@ class IMU {
         TwoWire *wirePort;
         Adafruit_BNO055 bno;
         float yaw = 0.0f;
+        float yawOrigin = 0.0f;
         bool connected = false;
+
+        static float normaliseYaw(float value);
 };

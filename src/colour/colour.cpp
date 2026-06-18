@@ -20,10 +20,9 @@ void ColourSensor::interruptWrapper() {
 }
 
 bool ColourSensor::detectedEdge() {
-    if (onField) {
-        onField = false;
-        return true;
-    }
-    return false;
+    noInterrupts();
+    bool detected = onField;
+    onField = false;
+    interrupts();
+    return detected;
 }
-

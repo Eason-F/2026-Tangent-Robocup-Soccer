@@ -16,6 +16,7 @@ bool IMU::setup() {
     delay(50);
     bno.setExtCrystalUse(true);
     update();
+    resetYawOrigin();
 
     return true;
 }
@@ -26,12 +27,22 @@ void IMU::update() {
     }
 
     imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
-    yaw = euler.x();
+    yaw = normaliseYaw(euler.x());
 }
 
 float IMU::getYaw() {
     update();
     return yaw;
+}
+
+float IMU::getRelativeYaw() {
+    update();
+    return normaliseYaw(yaw - yawOrigin);
+}
+
+void IMU::resetYawOrigin() {
+    update();
+    yawOrigin = yaw;
 }
 
 bool IMU::isConnected() {
@@ -48,4 +59,16 @@ void IMU::getCalibration(uint8_t &system, uint8_t &gyro, uint8_t &accel, uint8_t
     }
 
     bno.getCalibration(&system, &gyro, &accel, &mag);
+}
+
+float IMU::normaliseYaw(float value) {
+    while (value > 180.0f) {
+        value -= 360.0f;
+    }
+
+    while (value < -180.0f) {
+        value += 360.0f;
+    }
+
+    return value;
 }
