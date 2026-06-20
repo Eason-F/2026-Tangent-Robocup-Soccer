@@ -12,6 +12,8 @@ class QikEasy {
         void setup();
 
         void updateReadings();
+        void readMeasuredSignal(const uint8_t &moduleIndex, uint8_t &direction, uint16_t &strength);
+        void qikeasyReading(uint8_t &direction, uint16_t &strength);
 
     private:
         TwoWire &wirePort;
@@ -24,5 +26,5 @@ class QikEasy {
         uint16_t signalStrength(const int &receiverID);
         static float strengthToDistance(const uint16_t &strength);
 
-        static constexpr uint8_t AVERAGED_VECTOR_MAX = 3;
+        static constexpr uint8_t AVERAGED_VECTOR_MAX = 1;
 };
