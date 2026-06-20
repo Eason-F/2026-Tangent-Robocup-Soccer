@@ -94,3 +94,11 @@ Vector QikEasy::qikeasyReadings() {
 float QikEasy::strengthToDistance(const uint16_t &strength) {
     return 0.0f;
 }
+
+float QikEasy::getDirectionRadians() {
+    return signalVec.angle;
+}
+
+float QikEasy::getSignalStrength() {
+    return signalVec.magnitude;
+}

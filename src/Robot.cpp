@@ -30,7 +30,7 @@ void Robot::run() {
         if (now - lastTime >= LOOP_TIME_MS) {
             float dt = (now - lastTime) / 1000.0f;
             lastTime = now;
-            drive.moveInDirection(dt, 0, MOVE_SPEED);
+            drive.moveInDirection(dt, irSensor.getDirectionRadians(), MOVE_SPEED);
         }
     } else {
         drive.stop();
