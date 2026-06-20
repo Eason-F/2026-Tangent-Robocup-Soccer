@@ -27,15 +27,16 @@ bool Robot::handleColourSensor() {
 
     drive.stop();
     LOG("Colour sensor detected HIGH", true); LOG_NEXT;
-    delay(50);
+    delay(1000);
     movedir = lastDirection*20 - 180; 
+    LOG("Moving back in direction:", movedir); LOG_NEXT;
     noInterrupts();
     drive.moveInDirection(0.5, movedir, backspd);
-    delay(200);
+    delay(500);
     drive.stop();
     delay(10);
     interrupts();
-    return true;
+    return true;    
 }
 
 bool Robot::handleHeadingAdjustment(float dt) {
@@ -58,7 +59,6 @@ void Robot::run() {
     irSensor.qikeasyReading(qikeasyDirection, qikeasyStrength);
     heading = imu.getRelativeYaw();
     if (button.isPressed()) {
-        if (handleColourSensor()) return;
 
         unsigned long now = millis();
         if (false) {
@@ -68,23 +68,22 @@ void Robot::run() {
             return;
         }
         if (now - lastTime >= LOOP_TIME_MS) {
+            if (handleColourSensor()) return;
+
             float dt = (now - lastTime) / 1000.0f;
             lastTime = now;
             irSensor.updateReadings();
-            if (handleColourSensor()) {
-                return;
-            }
             if (handleHeadingAdjustment(dt)) {
                 if (handleColourSensor()) return;
-
-                LOG("Heading correction:", heading); LOG_NEXT;
+                // LOG("Heading correction:", heading); LOG_NEXT;
                 return;
             }
             movedir = qikeasyDirection*20;
             drive.moveInDirection(dt, movedir, movespd);
-            lastDirection = qikeasyDirection;
-            LOG("Moving direction:", movedir); LOG_NEXT;    
-            LOG("Yaw:", heading); LOG_NEXT;    
+        lastDirection = qikeasyDirection;
+            // LOG("Moving direction:", movedir); LOG_NEXT;    
+            // LOG("Yaw:", heading); LOG_NEXT;    
+        if (handleColourSensor()) return;
 
         }
             
@@ -97,4 +96,5 @@ void Robot::run() {
     // LOG("IR Direction", qikeasyDirection); LOG_NEXT;
     // LOG("IR Strength", qikeasyStrength); LOG_NEXT;
     // LOG("IMU", imu.getYaw()); LOG_NEXT;
+    // LOG("colour", colourSensor.sensorState()); LOG_NEXT;
 }

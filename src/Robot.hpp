@@ -39,8 +39,8 @@ class Robot {
         uint16_t qikeasyStrength = 0;
 
         int movedir = 0;
-        uint16_t movespd = 200;
-        uint16_t backspd = 150;
+        uint16_t movespd = 250;
+        uint16_t backspd = 200;
         float heading = 0.0f;
         float targetHeading = 0.0f;
 
