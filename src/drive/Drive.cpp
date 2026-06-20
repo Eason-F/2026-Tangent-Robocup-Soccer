@@ -16,6 +16,7 @@ void Drive::setup() {
 }
 
 void Drive::moveInDirection(float dt, int directionDegrees, int rpm) {
+    lastDirection = directionDegrees;
     motor1.setMotorRPM(cos(radians(directionDegrees + 315)) * rpm, dt);
     motor2.setMotorRPM(cos(radians(directionDegrees + 225)) * rpm, dt);
     motor3.setMotorRPM(cos(radians(directionDegrees + 45)) * rpm, dt);
@@ -34,4 +35,20 @@ void Drive::stop() {
     motor2.brake();
     motor3.brake();
     motor4.brake();
+}
+
+bool Drive::headingCorrected(float heading) {
+    return abs(heading - targetHeading) <= HEADING_TOLERANCE_DEGREES;
+}
+
+void Drive::correctHeading(float dt, float heading) {
+    if (headingCorrected(heading)) {
+        return;
+    }
+
+    int adjustmentRate = heading * HEADING_ADJUSTMENT_MULTIPLIER + TURN_SPEED;
+    adjustmentRate *= (heading > 0) ? -1 : 1;
+    turnInDirection(dt, adjustmentRate);
+
+    LOG("Adjusting rate:", adjustmentRate); LOG_NEXT;
 }

@@ -29,7 +29,7 @@ class Vector {
         float x = 0;
         float y = 0;
         float angle = 0;
-        float length = 0;
+        float magnitude = 0;
 
         struct Position{}; // structs for constructor differentiation
         struct AngMag{};
