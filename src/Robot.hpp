@@ -33,8 +33,7 @@ class Robot {
 
         unsigned long lastTime = millis();
 
-        bool handleColourSensor();
-        bool handleHeadingAdjustment(float dt);
+        bool handleEdgeDetection();
 
         Button button;
         QikEasy irSensor;

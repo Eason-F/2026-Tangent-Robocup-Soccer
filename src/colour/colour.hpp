@@ -4,17 +4,14 @@
 class ColourSensor{
     public:
         ColourSensor(const int &pin);
-
+        void setup();
+        void update(long elapsedMillis);
         bool detectedEdge();
-        bool sensorState();
-
 
     private:
-        static ColourSensor* instance;
-        volatile bool onField = false;
-        static void interruptWrapper();
-        void onFallingEdge();
-        void colourSensor_init();
+        static constexpr uint8_t DEBOUNCE_BUFFER_MS = 50;
+        const uint8_t pin;
 
+        unsigned long accumulatedDetectionTime;
 };
 

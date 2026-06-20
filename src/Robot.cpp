@@ -10,55 +10,28 @@ bool Button::isPressed() {
     return !digitalRead(buttonPin);
 }
 
-Robot::Robot() : button(41), irSensor(Wire2), imu(Wire2, 0x28), colourSensor(22) {}
+Robot::Robot() : button(41), irSensor(Wire2), imu(Wire2), colourSensor(22) {}
 
 void Robot::setup() {
     button.setup();
     drive.setup();
     irSensor.setup();
-    imu.setup();
-    imu.resetYawOrigin();
-}
-
-bool Robot::handleColourSensor() {
-    if (!colourSensor.detectedEdge()) {
-        return false;
-    }
-
-    drive.stop();
-    LOG("Colour sensor detected HIGH", true); LOG_NEXT;
-    delay(1000);
-    movedir = lastDirection * 20 - 180; 
-    LOG("Moving back in direction:", movedir); LOG_NEXT;
-    drive.moveInDirection(0.5, movedir, BACK_SPEED);
-    delay(500);
-    drive.stop();
-    delay(10);
-    return true;
+    imu.setup(); imu.resetYawOrigin();
 }
 
 void Robot::run() {
+    unsigned long now = millis();
+    colourSensor.update(now - lastTime);
     irSensor.updateReadings();
     imu.updateReadings();
-    if (button.isPressed()) {
-        unsigned long now = millis();
-        if (now - lastTime >= LOOP_TIME_MS) {
-            if (handleColourSensor()) return;
 
+    if (button.isPressed()) {
+        conditionallyBreakLoop(handleEdgeDetection());
+        if (now - lastTime >= LOOP_TIME_MS) {
             float dt = (now - lastTime) / 1000.0f;
             lastTime = now;
-            irSensor.updateReadings();
-            if (handleHeadingAdjustment(dt)) {
-                if (handleColourSensor()) return;
-                return;
-            }
-            movedir = qikeasyDirection*20;
-            drive.moveInDirection(dt, movedir, MOVE_SPEED);
-        lastDirection = qikeasyDirection;  
-        if (handleColourSensor()) return;
-
+            drive.moveInDirection(dt, 0, MOVE_SPEED);
         }
-            
     } else {
         drive.stop();
         imu.resetYawOrigin();
@@ -71,4 +44,19 @@ void Robot::run() {
     // LOG("Moving direction:", movedir); LOG_NEXT;    
     // LOG("Yaw:", heading); LOG_NEXT;  
     // LOG("Heading correction:", heading); LOG_NEXT;
+}
+
+
+bool Robot::handleEdgeDetection() {
+    if (!colourSensor.detectedEdge()) {
+        return false;
+    }
+
+    drive.stop();
+    drive.moveInDirection(0.5, drive.lastDirection - 180, BACK_SPEED);
+    delay(500);
+
+    LOG_PRINT("Colour sensor detected HIGH"); 
+    LOG("Moving back in direction:", drive.lastDirection - 180); LOG_NEXT;
+    return true;
 }

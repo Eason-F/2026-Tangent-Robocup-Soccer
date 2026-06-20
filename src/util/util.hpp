@@ -6,6 +6,8 @@
 #define LOG_PRINT(text) Serial.print(text);
 #define LOG(header, text) LOG_PRINT(header); LOG_PRINT(": "); LOG_PRINT(text); LOG_PRINT("  | ");
 
+#define conditionallyBreakLoop(bool) if (bool) {return;}
+
 class PIDController {
     private:
         const float kP = 0;

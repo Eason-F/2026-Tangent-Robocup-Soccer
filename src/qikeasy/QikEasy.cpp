@@ -8,7 +8,7 @@ void QikEasy::setup() {
 
 Vector QikEasy::readMeasuredSignal(const uint8_t &moduleIndex) {
     const uint8_t moduleAddress = MODULE_ADDRESSES[moduleIndex % 2];
-    uint8_t direction; uint16_t strength;
+    uint8_t direction = 0; uint16_t strength = 0;
 
     wirePort.beginTransmission(moduleAddress);
     wirePort.write(DIRECTION_REGISTER);

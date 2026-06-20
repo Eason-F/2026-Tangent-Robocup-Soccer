@@ -26,9 +26,10 @@ class Drive {
         Drive();
         void setup();
 
-        void update(float dt);
+        void updateRPM(float dt);
         void correctHeading(float dt, float heading);
         bool headingCorrected(float heading);
+        
         void moveInDirection(float dt, int directionDegrees, int rpm);
         void turnInDirection(float dt, int rpm);
         void stop();
