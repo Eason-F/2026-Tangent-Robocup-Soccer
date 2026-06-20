@@ -30,15 +30,14 @@ void Robot::run() {
         if (now - lastTime >= LOOP_TIME_MS) {
             float dt = (now - lastTime) / 1000.0f;
             lastTime = now;
-            drive.moveInDirection(dt, irSensor.getDirectionRadians(), MOVE_SPEED);
+            drive.moveInDirection(dt, degrees(irSensor.getDirectionRadians()), MOVE_SPEED);
         }
     } else {
         drive.stop();
         imu.resetYawOrigin();
     }
 
-    // LOG("IR Direction", qikeasyDirection); LOG_NEXT;
-    // LOG("IR Strength", qikeasyStrength); LOG_NEXT;
+    LOG("IRDir", degrees(irSensor.getDirectionRadians())); LOG_NEXT;
     // LOG("IMU", imu.getYaw()); LOG_NEXT;
     // LOG("colour", colourSensor.sensorState()); LOG_NEXT;
     // LOG("Moving direction:", movedir); LOG_NEXT;    
