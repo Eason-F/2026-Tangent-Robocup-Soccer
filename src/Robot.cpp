@@ -32,14 +32,14 @@ void Robot::run() {
             conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
             conditionallyBreakLoop(handleEdgeDetection(dt));
 
-            drive.moveInDirection(dt, degrees(irSensor.getDirectionRadians()), MOVE_SPEED);
+            drive.moveInDirection(dt, irSensor.getDirectionDegrees(), MOVE_SPEED);
         }
     } else {
         drive.stop();
         imu.resetYawOrigin();
     }
 
-    LOG("IRDir", degrees(irSensor.getDirectionRadians())); LOG_NEXT;
+    LOG("IRDir", irSensor.getDirectionDegrees()); LOG_NEXT;
     // LOG("IMU", imu.getRelativeYaw()); LOG("Heading Corrected", drive.headingCorrected(imu.getRelativeYaw())); LOG_NEXT;
     // LOG("colour", colourSensor.sensorState()); LOG_NEXT;
     // LOG("Moving direction:", movedir); LOG_NEXT;    

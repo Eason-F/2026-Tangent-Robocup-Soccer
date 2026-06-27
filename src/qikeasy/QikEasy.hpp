@@ -9,7 +9,7 @@ class QikEasy {
         void setup();
 
         void updateReadings();
-        float getDirectionRadians();
+        float getDirectionDegrees();
         float getSignalStrength();
         static float strengthToDistance(const uint16_t &strength);
 

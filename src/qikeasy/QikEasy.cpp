@@ -95,8 +95,8 @@ float QikEasy::strengthToDistance(const uint16_t &strength) {
     return 0.0f;
 }
 
-float QikEasy::getDirectionRadians() {
-    return signalVec.angle;
+float QikEasy::getDirectionDegrees() {
+    return degrees(signalVec.angle);
 }
 
 float QikEasy::getSignalStrength() {
