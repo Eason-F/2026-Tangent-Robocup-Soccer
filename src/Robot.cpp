@@ -24,18 +24,30 @@ bool Robot::handleColourSensor() {
     if (!colourSensor.detectedEdge()) {
         return false;
     }
-
     drive.stop();
     LOG("Colour sensor detected HIGH", true); LOG_NEXT;
-    delay(1000);
-    movedir = lastDirection*20 - 180; 
+    int movedir = lastDirection - 180; 
     LOG("Moving back in direction:", movedir); LOG_NEXT;
-    noInterrupts();
     drive.moveInDirection(0.5, movedir, backspd);
-    delay(500);
-    drive.stop();
-    delay(10);
-    interrupts();
+    delay(300);
+    lastDirection = movedir;
+
+    // while (colourSensor.detectedEdge()){
+    //     drive.stop();
+    //     LOG("Colour sensor detected HIGH", true); LOG_NEXT;
+    //     int movedir = lastDirection - 180; 
+    //     LOG("Moving back in direction:", movedir); LOG_NEXT;
+    //     drive.moveInDirection(0.5, movedir, backspd);
+    //     delay(300);
+    //     lastDirection = movedir;
+    //     counter++;
+    //     if (counter >= 3) {
+    //         drive.stop();
+    //         drive.moveInDirection(0.5, degrees(irSensor.signalVec.angle), backspd);
+    //         delay(300);
+    //         return true;
+    //     }
+    // }
     return true;    
 }
 
@@ -59,6 +71,7 @@ void Robot::run() {
     irSensor.qikeasyReading(qikeasyDirection, qikeasyStrength);
     heading = imu.getRelativeYaw();
     if (button.isPressed()) {
+        if (handleColourSensor()) return;
 
         unsigned long now = millis();
         if (false) {
@@ -78,13 +91,11 @@ void Robot::run() {
                 // LOG("Heading correction:", heading); LOG_NEXT;
                 return;
             }
-            movedir = qikeasyDirection*20;
+            int movedir = drive.moveAroundBall(degrees(irSensor.signalVec.angle), irSensor.signalVec.length);
+            LOG("Moving in direction:", movedir); LOG_NEXT;
             drive.moveInDirection(dt, movedir, movespd);
-        lastDirection = qikeasyDirection;
-            // LOG("Moving direction:", movedir); LOG_NEXT;    
-            // LOG("Yaw:", heading); LOG_NEXT;    
-        if (handleColourSensor()) return;
-
+            LOG("Strength", irSensor.signalVec.length); LOG_NEXT;
+        lastDirection = degrees(irSensor.signalVec.angle);    
         }
             
     } else {

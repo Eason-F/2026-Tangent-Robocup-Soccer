@@ -26,5 +26,5 @@ class QikEasy {
         uint16_t signalStrength(const int &receiverID);
         static float strengthToDistance(const uint16_t &strength);
 
-        static constexpr uint8_t AVERAGED_VECTOR_MAX = 1;
+        static constexpr uint8_t AVERAGED_VECTOR_MAX = 3;
 };

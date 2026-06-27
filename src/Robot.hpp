@@ -29,7 +29,7 @@ class Robot {
     private:
         static constexpr uint LOOP_TIME_MS = 50;
         static constexpr int GYRO_RANGE = 25;
-        static constexpr int GYRO_SPD = 20;
+        static constexpr int GYRO_SPD = 15;
         static constexpr float GYRO_SPD_MULT = 0.5f;
 
         unsigned long lastTime = millis();
@@ -38,8 +38,7 @@ class Robot {
         uint8_t qikeasyDirection = 0;
         uint16_t qikeasyStrength = 0;
 
-        int movedir = 0;
-        uint16_t movespd = 250;
+        uint16_t movespd = 225;
         uint16_t backspd = 200;
         float heading = 0.0f;
         float targetHeading = 0.0f;

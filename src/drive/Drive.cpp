@@ -22,6 +22,20 @@ void Drive::moveInDirection(float dt, int directionDegrees, int rpm) {
     motor4.setMotorRPM(cos(radians(directionDegrees + 135)) * rpm, dt);
 }
 
+int Drive::moveAroundBall(float ballDirection, float ballDistance) {
+    int movingDirection = ballDirection;
+    if (ballDistance < moveRange) {
+        if (abs(ballDirection) < 30) {
+            movingDirection = 0;
+        } else if (ballDirection < 0) {
+            movingDirection = ballDirection - movingAround;
+        } else {
+            movingDirection = ballDirection + movingAround;
+        }
+    }
+    return movingDirection;
+}
+
 void Drive::turnInDirection(float dt, int rpm) {
     motor1.setMotorRPM(rpm, dt);
     motor2.setMotorRPM(rpm, dt);

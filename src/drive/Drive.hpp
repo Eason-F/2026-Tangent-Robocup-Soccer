@@ -30,8 +30,12 @@ class Drive {
         void moveInDirection(float dt, int directionDegrees, int rpm);
         void turnInDirection(float dt, int rpm);
         void stop();
+        int moveAroundBall(float ballDirection, float ballDistance);
 
     private: 
+        int moveRange = 360;
+        int movingAround = 45;
+
         static constexpr int DIRECTION_PIN1_1 = 2;
         static constexpr int DIRECTION_PIN2_1 = 3;
         static constexpr int ENCODER_PIN1_1 = 33;
