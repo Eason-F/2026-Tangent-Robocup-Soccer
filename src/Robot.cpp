@@ -20,19 +20,18 @@ void Robot::setup() {
 }
 
 void Robot::run() {
-    unsigned long now = millis();
-    colourSensor.update(now - lastTime);
+    colourSensor.update(elapsedLastTime);
     irSensor.updateReadings();
     imu.updateReadings();
 
     if (button.isPressed()) {
-        // conditionallyBreakLoop(drive.correctHeading(0.01, imu.getRelativeYaw()));
-        // conditionallyBreakLoop(handleEdgeDetection());
-        if (now - lastTime >= LOOP_TIME_MS) {
-            float dt = (now - lastTime) / 1000.0f;
-            lastTime = now;
+        if (elapsedLastTime >= LOOP_TIME_MS) {
+            float dt = elapsedLastTime / 1000.0f;
+            elapsedLastTime = 0;
 
-            // drive.stop();
+            conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
+            conditionallyBreakLoop(handleEdgeDetection(dt));
+
             drive.moveInDirection(dt, degrees(irSensor.getDirectionRadians()), MOVE_SPEED);
         }
     } else {
@@ -49,13 +48,13 @@ void Robot::run() {
 }
 
 
-bool Robot::handleEdgeDetection() {
+bool Robot::handleEdgeDetection(float dt) {
     if (!colourSensor.detectedEdge()) {
         return false;
     }
 
     drive.stop();
-    drive.moveInDirection(0.5, drive.lastDirection - 180, BACK_SPEED);
+    drive.moveInDirection(dt, drive.lastDirection - 180, BACK_SPEED);
     delay(500);
 
     LOG_PRINT("Colour sensor detected HIGH"); 

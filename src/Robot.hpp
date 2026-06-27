@@ -27,13 +27,13 @@ class Robot {
         void run();
 
     private:
-        static constexpr uint LOOP_TIME_MS = 50;
+        static constexpr uint LOOP_TIME_MS = 10;
         static constexpr uint MOVE_SPEED = 250;
         static constexpr uint BACK_SPEED = 200;
 
-        unsigned long lastTime = millis();
+        elapsedMillis elapsedLastTime;
 
-        bool handleEdgeDetection();
+        bool handleEdgeDetection(float dt);
 
         Button button;
         QikEasy irSensor;
