@@ -21,12 +21,12 @@ Vector::Vector(Position, const float &posX, const float &posY) {
     this-> x = posX;
     this-> y = posY;
     angle = atan2(posY, posX);
-    length = sqrt(pow(posX, 2) + pow(posY, 2));
+    magnitude = sqrt(pow(posX, 2) + pow(posY, 2));
 }
 
 Vector::Vector(AngMag, const float &angle, const float &length) {
     this-> angle = angle;
-    this-> length = length;
+    this-> magnitude = length;
     x = length * cos(angle);
     y = length * sin(angle);
 }

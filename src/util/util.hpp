@@ -4,7 +4,9 @@
 
 #define LOG_NEXT Serial.println();
 #define LOG_PRINT(text) Serial.print(text);
-#define LOG(header, text) LOG_PRINT(header); LOG_PRINT(": "); LOG_PRINT(text); LOG_PRINT("  | ");
+#define LOG(header, text) LOG_PRINT(header) LOG_PRINT(": ") LOG_PRINT(text) LOG_PRINT("  | ")
+
+#define conditionallyBreakLoop(bool) if (bool) {return;}
 
 class PIDController {
     private:
@@ -29,7 +31,7 @@ class Vector {
         float x = 0;
         float y = 0;
         float angle = 0;
-        float length = 0;
+        float magnitude = 0;
 
         struct Position{}; // structs for constructor differentiation
         struct AngMag{};
