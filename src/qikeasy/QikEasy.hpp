@@ -13,7 +13,7 @@ class QikEasy {
 
         void updateReadings();
         void readMeasuredSignal(const uint8_t &moduleIndex, uint8_t &direction, uint16_t &strength);
-        void qikeasyReading(uint8_t &direction, uint16_t &strength);
+        void qikeasyReading(uint16_t &direction, uint16_t &strength);
 
     private:
         TwoWire &wirePort;

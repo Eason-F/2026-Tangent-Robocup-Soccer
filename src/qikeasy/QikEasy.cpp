@@ -29,7 +29,7 @@ void QikEasy::readMeasuredSignal(const uint8_t &moduleIndex, uint8_t &direction,
     }
 }
 
-void QikEasy::qikeasyReading(uint8_t &direction, uint16_t &strength) {
+void QikEasy::qikeasyReading(uint16_t &direction, uint16_t &strength) {
     uint16_t strength1 = 0;
     uint8_t direction1 = 0;
     uint16_t strength2 = 0;

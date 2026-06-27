@@ -33,7 +33,7 @@ class Drive {
         int moveAroundBall(float ballDirection, float ballDistance);
 
     private: 
-        int moveRange = 360;
+        int moveRange = 450;
         int movingAround = 45;
 
         static constexpr int DIRECTION_PIN1_1 = 2;

@@ -24,7 +24,10 @@ void Drive::moveInDirection(float dt, int directionDegrees, int rpm) {
 
 int Drive::moveAroundBall(float ballDirection, float ballDistance) {
     int movingDirection = ballDirection;
-    if (ballDistance < moveRange) {
+    if (ballDistance == 0) {
+        movingDirection = -1;
+    }
+    if (ballDistance > moveRange) {
         if (abs(ballDirection) < 30) {
             movingDirection = 0;
         } else if (ballDirection < 0) {

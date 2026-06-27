@@ -21,33 +21,16 @@ void Robot::setup() {
 }
 
 bool Robot::handleColourSensor() {
+    return false;
     if (!colourSensor.detectedEdge()) {
         return false;
     }
     drive.stop();
-    LOG("Colour sensor detected HIGH", true); LOG_NEXT;
     int movedir = lastDirection - 180; 
     LOG("Moving back in direction:", movedir); LOG_NEXT;
     drive.moveInDirection(0.5, movedir, backspd);
     delay(300);
     lastDirection = movedir;
-
-    // while (colourSensor.detectedEdge()){
-    //     drive.stop();
-    //     LOG("Colour sensor detected HIGH", true); LOG_NEXT;
-    //     int movedir = lastDirection - 180; 
-    //     LOG("Moving back in direction:", movedir); LOG_NEXT;
-    //     drive.moveInDirection(0.5, movedir, backspd);
-    //     delay(300);
-    //     lastDirection = movedir;
-    //     counter++;
-    //     if (counter >= 3) {
-    //         drive.stop();
-    //         drive.moveInDirection(0.5, degrees(irSensor.signalVec.angle), backspd);
-    //         delay(300);
-    //         return true;
-    //     }
-    // }
     return true;    
 }
 
@@ -81,23 +64,28 @@ void Robot::run() {
             return;
         }
         if (now - lastTime >= LOOP_TIME_MS) {
-            if (handleColourSensor()) return;
-
             float dt = (now - lastTime) / 1000.0f;
             lastTime = now;
             irSensor.updateReadings();
-            if (handleHeadingAdjustment(dt)) {
-                if (handleColourSensor()) return;
-                // LOG("Heading correction:", heading); LOG_NEXT;
-                return;
-            }
-            int movedir = drive.moveAroundBall(degrees(irSensor.signalVec.angle), irSensor.signalVec.length);
+
+            qikeasyDirection = qikeasyDirection * 20; // convert to degrees
+            qikeasyDirection -= 180; // convert to robot frame of reference
+            int movedir = drive.moveAroundBall(qikeasyDirection, qikeasyStrength);
+            LOG("IR Direction", qikeasyDirection); LOG_NEXT;
             LOG("Moving in direction:", movedir); LOG_NEXT;
-            drive.moveInDirection(dt, movedir, movespd);
-            LOG("Strength", irSensor.signalVec.length); LOG_NEXT;
-        lastDirection = degrees(irSensor.signalVec.angle);    
+            LOG("Strength", qikeasyStrength); LOG_NEXT;
+            if (movedir == -1) {
+                drive.stop();
+                return;
+            } else {
+                drive.moveInDirection(dt, movedir, movespd);
+            }
+        if (handleHeadingAdjustment(dt)) {
+            if (handleColourSensor()) return;
+            return;
         }
-            
+        lastDirection = degrees(irSensor.signalVec.angle);    
+        }       
     } else {
         drive.stop();
         imu.resetYawOrigin();
