@@ -27,7 +27,7 @@ class Drive {
         void setup();
 
         void updateRPM(float dt);
-        void correctHeading(float dt, float heading);
+        bool correctHeading(float dt, float heading);
         bool headingCorrected(float heading);
         
         void moveInDirection(float dt, int directionDegrees, int rpm);
@@ -58,7 +58,7 @@ class Drive {
         static constexpr int ENCODER_PIN2_4 = 40;
 
         static constexpr float HEADING_ADJUSTMENT_MULTIPLIER = 0.5f;
-        static constexpr int HEADING_TOLERANCE_DEGREES = 25;
-        static constexpr int TURN_SPEED = 20;
-        float targetHeading;
+        static constexpr int HEADING_TOLERANCE_DEGREES = 15;
+        static constexpr int TURN_SPEED = 30;
+        float targetHeading = 0;
 };

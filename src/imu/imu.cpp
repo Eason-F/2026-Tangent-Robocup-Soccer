@@ -24,7 +24,6 @@ void IMU::updateReadings() {
 }
 
 float IMU::getYaw() {
-    updateReadings();
     return yaw;
 }
 

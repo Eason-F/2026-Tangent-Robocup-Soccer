@@ -26,7 +26,7 @@ class QikEasy {
         Vector qikeasyReadings();
         Vector vectorReadings();
 
-        static constexpr uint8_t AVERAGED_VECTOR_MAX = 0;
+        static constexpr uint8_t AVERAGED_VECTOR_MAX = 3;
         Vector signalVec;
         Vector allVecs[10];
 };

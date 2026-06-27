@@ -26,10 +26,13 @@ void Robot::run() {
     imu.updateReadings();
 
     if (button.isPressed()) {
-        conditionallyBreakLoop(handleEdgeDetection());
+        // conditionallyBreakLoop(drive.correctHeading(0.01, imu.getRelativeYaw()));
+        // conditionallyBreakLoop(handleEdgeDetection());
         if (now - lastTime >= LOOP_TIME_MS) {
             float dt = (now - lastTime) / 1000.0f;
             lastTime = now;
+
+            // drive.stop();
             drive.moveInDirection(dt, degrees(irSensor.getDirectionRadians()), MOVE_SPEED);
         }
     } else {
@@ -38,7 +41,7 @@ void Robot::run() {
     }
 
     LOG("IRDir", degrees(irSensor.getDirectionRadians())); LOG_NEXT;
-    // LOG("IMU", imu.getYaw()); LOG_NEXT;
+    // LOG("IMU", imu.getRelativeYaw()); LOG("Heading Corrected", drive.headingCorrected(imu.getRelativeYaw())); LOG_NEXT;
     // LOG("colour", colourSensor.sensorState()); LOG_NEXT;
     // LOG("Moving direction:", movedir); LOG_NEXT;    
     // LOG("Yaw:", heading); LOG_NEXT;  

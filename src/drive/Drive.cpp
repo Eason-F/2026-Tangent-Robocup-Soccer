@@ -41,14 +41,14 @@ bool Drive::headingCorrected(float heading) {
     return abs(heading - targetHeading) <= HEADING_TOLERANCE_DEGREES;
 }
 
-void Drive::correctHeading(float dt, float heading) {
+bool Drive::correctHeading(float dt, float heading) {
     if (headingCorrected(heading)) {
-        return;
+        return false;
     }
 
-    int adjustmentRate = heading * HEADING_ADJUSTMENT_MULTIPLIER + TURN_SPEED;
+    int adjustmentRate = abs((heading - targetHeading)) * HEADING_ADJUSTMENT_MULTIPLIER + TURN_SPEED;
     adjustmentRate *= (heading > 0) ? -1 : 1;
     turnInDirection(dt, adjustmentRate);
 
-    LOG("Adjusting rate:", adjustmentRate); LOG_NEXT;
+    return true;
 }
