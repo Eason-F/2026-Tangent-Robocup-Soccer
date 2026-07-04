@@ -10,17 +10,19 @@ bool Button::isPressed() {
     return !digitalRead(buttonPin);
 }
 
-Robot::Robot() : button(41), irSensor(Wire2), imu(Wire2), colourSensor(22) {}
+Robot::Robot() : button(41), irSensor(Wire2), imu(Wire2), odometry(Wire), colourSensor(22){}
 
 void Robot::setup() {
     button.setup();
     drive.setup();
     irSensor.setup();
+    odometry.setup();
     imu.setup(); imu.resetYawOrigin();
 }
 
 void Robot::run() {
     colourSensor.update(elapsedLastTime);
+    odometry.update();
     irSensor.updateReadings();
     imu.updateReadings();
 
@@ -39,12 +41,11 @@ void Robot::run() {
         imu.resetYawOrigin();
     }
 
-    LOG("IRDir", irSensor.getDirectionDegrees()); LOG_NEXT;
-    // LOG("IMU", imu.getRelativeYaw()); LOG("Heading Corrected", drive.headingCorrected(imu.getRelativeYaw())); LOG_NEXT;
-    // LOG("colour", colourSensor.sensorState()); LOG_NEXT;
-    // LOG("Moving direction:", movedir); LOG_NEXT;    
-    // LOG("Yaw:", heading); LOG_NEXT;  
-    // LOG("Heading correction:", heading); LOG_NEXT;
+    // LOG("irDirection", irSensor.getDirectionDegrees()); 
+    // LOG("heading", imu.getRelativeYaw()); 
+    // LOG("colour", colourSensor.sensorState()); 
+    LOG("odometryX", odometry.getX()); LOG("odometryY", odometry.getY()); LOG("odometryH", odometry.getHeading());
+    LOG_NEXT;
 }
 
 
@@ -57,7 +58,6 @@ bool Robot::handleEdgeDetection(float dt) {
     drive.moveInDirection(dt, drive.lastDirection - 180, BACK_SPEED);
     delay(500);
 
-    LOG_PRINT("Colour sensor detected HIGH"); 
-    LOG("Moving back in direction:", drive.lastDirection - 180); LOG_NEXT;
+    LOG("\n\nMoving back in direction:", drive.lastDirection - 180); LOG_NEXT;
     return true;
 }
