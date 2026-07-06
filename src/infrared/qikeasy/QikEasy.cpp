@@ -1,4 +1,4 @@
-#include <qikeasy/QikEasy.hpp>
+#include <infrared/qikeasy/QikEasy.hpp>
 
 QikEasy::QikEasy(TwoWire &wirePort) : wirePort(wirePort) {}
 
@@ -90,10 +90,6 @@ Vector QikEasy::qikeasyReadings() {
     return signal;
 }
 
-
-float QikEasy::strengthToDistance(const uint16_t &strength) {
-    return 0.0f;
-}
 
 float QikEasy::getDirectionDegrees() {
     return degrees(signalVec.angle);

@@ -2,16 +2,16 @@
 
 #include <Wire.h>
 #include <util/util.hpp>
+#include <infrared/InfraredABC.hpp>
 
-class QikEasy {
+class QikEasy : public InfraredABC{
     public:
         QikEasy(TwoWire &wirePort);
-        void setup();
+        void setup() override;
 
-        void updateReadings();
-        float getDirectionDegrees();
-        float getSignalStrength();
-        static float strengthToDistance(const uint16_t &strength);
+        void updateReadings() override;
+        float getDirectionDegrees() override;
+        float getSignalStrength() override;
 
     private:
         TwoWire &wirePort;

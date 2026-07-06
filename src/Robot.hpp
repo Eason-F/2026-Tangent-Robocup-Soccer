@@ -2,7 +2,7 @@
 
 #include <drive/Drive.hpp>
 #include <odometry/Odometry.hpp>
-#include <qikeasy/QikEasy.hpp>
+#include <infrared/qikeasy/QikEasy.hpp>
 #include <imu/imu.hpp>
 #include <util/util.hpp>
 #include <colour/colour.hpp>
