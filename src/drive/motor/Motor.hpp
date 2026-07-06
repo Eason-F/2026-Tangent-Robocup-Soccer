@@ -6,6 +6,7 @@
 class Motor {
     public:
         static constexpr int PULSE_PER_REVOLUTION = 1600;
+        static constexpr int MAX_RPM = 250;
 
         float angularVelocityRPM;
 
@@ -14,10 +15,10 @@ class Motor {
         Motor(const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController *pidController);
         void setup();
 
-        float getRPM(float dt);
+        float getRPM(const float &dt);
 
         void setMotorDutyCycle(int speed);
-        void setMotorRPM(int rpm, float dt);
+        void setMotorRPM(int rpm, const float &dt);
 
         void brake();
 

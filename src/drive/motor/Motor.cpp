@@ -26,20 +26,17 @@ void Motor::setup() {
     analogWriteFrequency(DIRECTION_PIN1, 20000);
     analogWriteFrequency(DIRECTION_PIN2, 20000);
 
-    // LOG_PRINT(ENCODER_PIN1); LOG_PRINT(ENCODER_PIN2);
     if ((ENCODER_PIN1 > 0 && ENCODER_PIN2 > 0) && (encoder == nullptr)) {
         encoder = new Encoder(ENCODER_PIN1, ENCODER_PIN2);
     }
-    // Serial.println((uint32_t)encoder, HEX);
     brake();
 }
 
-float Motor::getRPM(float dt) {
+float Motor::getRPM(const float &dt) {
     if (encoder == nullptr || dt <= 0.0f)
         return 0.0f;
 
     long delta = encoder-> readAndReset();
-    // LOG("count", delta);
     angularVelocityRPM = (delta / (float)PULSE_PER_REVOLUTION) * (60.0 / dt);
     return angularVelocityRPM;
 };
@@ -62,7 +59,7 @@ void Motor::setMotorDutyCycle(int speed) {
     }
 }
 
-void Motor::setMotorRPM(int rpm, float dt) {
+void Motor::setMotorRPM(int rpm, const float &dt) {
     if (pidController == nullptr)
         return;
 

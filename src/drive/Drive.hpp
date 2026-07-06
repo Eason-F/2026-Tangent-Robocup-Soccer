@@ -1,22 +1,30 @@
 #pragma once
 
 #include <drive/motor/Motor.hpp>
+#include <odometry/Odometry.hpp>
 #include <util/util.hpp>
 
 #define ENCODER_USE_INTERRUPTS
 
 class Drive {
     public:
-        static constexpr float pidKP = 0.2;
-        static constexpr float pidKI = 0;
-        static constexpr float pidKD = 0;
-        static constexpr float pidMax = 255;
-        static constexpr float pidMin = 0;
+        static constexpr float motorKP = 0.2;
+        static constexpr float motorKI = 0;
+        static constexpr float motorKD = 0;
+        static constexpr float motorMax = 255;
+        static constexpr float motorMin = 0;
 
-        PIDController pidController1 = PIDController(pidKP, pidKI, pidKD, pidMin, pidMax);
-        PIDController pidController2 = PIDController(pidKP, pidKI, pidKD, pidMin, pidMax);
-        PIDController pidController3 = PIDController(pidKP, pidKI, pidKD, pidMin, pidMax);
-        PIDController pidController4 = PIDController(pidKP, pidKI, pidKD, pidMin, pidMax);
+        PIDController motorPID1 = PIDController(motorKP, motorKI, motorKD, motorMin, motorMax);
+        PIDController motorPID2 = PIDController(motorKP, motorKI, motorKD, motorMin, motorMax);
+        PIDController motorPID3 = PIDController(motorKP, motorKI, motorKD, motorMin, motorMax);
+        PIDController motorPID4 = PIDController(motorKP, motorKI, motorKD, motorMin, motorMax);
+
+        static constexpr float positionKP = 0.2;
+        static constexpr float positionKI = 0;
+        static constexpr float positionKD = 0;
+        static constexpr float positionMax = Motor::MAX_RPM;
+        static constexpr float positionMin = -Motor::MAX_RPM;
+        PIDController positionPID = PIDController(positionKP, positionKI, positionKD, positionMin, positionMax);
 
         Motor motor1;
         Motor motor2;
@@ -26,12 +34,14 @@ class Drive {
         Drive();
         void setup();
 
-        void updateRPM(float dt);
-        bool correctHeading(float dt, float heading);
+        void updateRPM(const float &dt);
+        bool correctHeading(const float &dt, float heading);
         bool headingCorrected(float heading);
         
-        void moveInDirection(float dt, int directionDegrees, int rpm);
-        void turnInDirection(float dt, int rpm);
+        void moveInDirection(const float &dt, int directionDegrees, int rpm);
+        void moveToPoint(const float &dt, const sfe_otos_pose2d_t &target, OpticalOdometry &odometry);
+        void moveToPoint(const float &dt, const float &targetX, const float &targetY, OpticalOdometry &odometry);
+        void turnInDirection(const float &dt, int rpm);
         void stop();
 
         float lastDirection;
