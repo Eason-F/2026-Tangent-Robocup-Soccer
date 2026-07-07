@@ -7,9 +7,13 @@ PIDController::PIDController(const float &kP, const float &kI, const float &kD, 
 float PIDController::adjustmentValue(float dt, float current, float target) {
     float error = target - current;
     float derivative = (error - lastError) / dt;
-    value += kP * error + kI * integral + kD * derivative;
+    integral += error * dt;
+    value = kP * error + kI * integral + kD * derivative;
     value = constrain(value, min, max);
     lastError = error;
+    // LOG("PID", value); LOG("value", value); 
+    // LOG("Error", error); 
+    // LOG("KP", kP * error); LOG("KI", kI * integral); LOG("KD", kD * derivative); 
     return value;
 };
 

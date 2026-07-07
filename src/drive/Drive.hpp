@@ -8,22 +8,22 @@
 
 class Drive {
     public:
-        static constexpr float motorKP = 0.2;
-        static constexpr float motorKI = 0;
-        static constexpr float motorKD = 0;
-        static constexpr float motorMax = 255;
-        static constexpr float motorMin = 0;
+        static constexpr float motorKP = 0.2f;
+        static constexpr float motorKI = 0.0001f;
+        static constexpr float motorKD = 0.001f;
+        static constexpr float motorMax = 255.0f;
+        static constexpr float motorMin = -255.0f;
 
         PIDController motorPID1 = PIDController(motorKP, motorKI, motorKD, motorMin, motorMax);
         PIDController motorPID2 = PIDController(motorKP, motorKI, motorKD, motorMin, motorMax);
         PIDController motorPID3 = PIDController(motorKP, motorKI, motorKD, motorMin, motorMax);
         PIDController motorPID4 = PIDController(motorKP, motorKI, motorKD, motorMin, motorMax);
 
-        static constexpr float positionKP = 0.2;
-        static constexpr float positionKI = 0;
-        static constexpr float positionKD = 0;
-        static constexpr float positionMax = Motor::MAX_RPM;
-        static constexpr float positionMin = -Motor::MAX_RPM;
+        static constexpr float positionKP = 5.0f;
+        static constexpr float positionKI = 0.0f;
+        static constexpr float positionKD = 0.0f;
+        static constexpr float positionMax = 1.0f;
+        static constexpr float positionMin = -1.0f;
         PIDController positionPID = PIDController(positionKP, positionKI, positionKD, positionMin, positionMax);
 
         Motor motor1;
@@ -39,8 +39,8 @@ class Drive {
         bool headingCorrected(float heading);
         
         void moveInDirection(const float &dt, int directionDegrees, int rpm);
-        void moveToPoint(const float &dt, const sfe_otos_pose2d_t &target, OpticalOdometry &odometry);
-        void moveToPoint(const float &dt, const float &targetX, const float &targetY, OpticalOdometry &odometry);
+        void moveToPoint(const float &dt, const int &rpm, const sfe_otos_pose2d_t &target, OpticalOdometry &odometry);
+        void moveToPoint(const float &dt, const int &rpm, const float &targetX, const float &targetY, OpticalOdometry &odometry);
         void turnInDirection(const float &dt, int rpm);
         void stop();
 

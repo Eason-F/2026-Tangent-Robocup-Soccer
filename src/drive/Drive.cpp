@@ -2,10 +2,10 @@
 #include <drive/Drive.hpp>
 
 Drive::Drive() :
-    motor1(DIRECTION_PIN1_1, DIRECTION_PIN2_1, ENCODER_PIN1_1, ENCODER_PIN2_1, &motorPID1),
-    motor2(DIRECTION_PIN1_2, DIRECTION_PIN2_2, ENCODER_PIN1_2, ENCODER_PIN2_2, &motorPID2),
-    motor3(DIRECTION_PIN1_3, DIRECTION_PIN2_3, ENCODER_PIN1_3, ENCODER_PIN2_3, &motorPID3),
-    motor4(DIRECTION_PIN1_4, DIRECTION_PIN2_4, ENCODER_PIN1_4, ENCODER_PIN2_4, &motorPID4) {}
+    motor1(DIRECTION_PIN1_1, DIRECTION_PIN2_1, ENCODER_PIN1_1, ENCODER_PIN2_1, motorPID1),
+    motor2(DIRECTION_PIN1_2, DIRECTION_PIN2_2, ENCODER_PIN1_2, ENCODER_PIN2_2, motorPID2),
+    motor3(DIRECTION_PIN1_3, DIRECTION_PIN2_3, ENCODER_PIN1_3, ENCODER_PIN2_3, motorPID3),
+    motor4(DIRECTION_PIN1_4, DIRECTION_PIN2_4, ENCODER_PIN1_4, ENCODER_PIN2_4, motorPID4) {}
 
 void Drive::setup() {
     analogWriteResolution(8);
@@ -23,14 +23,19 @@ void Drive::moveInDirection(const float &dt, int directionDegrees, int rpm) {
     motor4.setMotorRPM(cos(radians(directionDegrees + 135)) * rpm, dt);
 }
 
-void Drive::moveToPoint(const float &dt, const float &targetX, const float &targetY, OpticalOdometry &odometry) {
-    float distance = sqrt(pow(abs(odometry.getX() - targetX), 2) + pow(abs(odometry.getY() - targetY), 2));
-    float direction = degrees(atan2((odometry.getX() - targetX), abs(odometry.getY() - targetY)));
-    moveInDirection(dt, direction, positionPID.adjustmentValue(dt, distance, 0));
+void Drive::moveToPoint(const float &dt, const int &rpm, const float &targetX, const float &targetY, OpticalOdometry &odometry) {
+    float distance = sqrt(pow(targetX - odometry.getX(), 2) + pow(targetY - odometry.getY(), 2));
+    float direction = degrees(atan2(targetX - odometry.getX(), targetY - odometry.getY()));
+    int adjustment = positionPID.adjustmentValue(dt, 0, distance) * rpm;
+    LOG("X", odometry.getX()); LOG("Y", odometry.getY()); LOG("dist", distance); LOG("dir", direction); LOG("target", adjustment);
+    
+    // motor1.setMotorRPM(adjustment, dt);
+    moveInDirection(dt, direction, adjustment);
+    LOG("RPM", motor1.angularVelocityRPM); LOG_PRINT("Done"); LOG_NEXT;
 }
 
-void Drive::moveToPoint(const float &dt, const sfe_otos_pose2d_t &target, OpticalOdometry &odometry) {
-    moveToPoint(dt, target.x, target.y, odometry);
+void Drive::moveToPoint(const float &dt, const int &rpm, const sfe_otos_pose2d_t &target, OpticalOdometry &odometry) {
+    moveToPoint(dt, rpm, target.x, target.y, odometry);
 }
 
 void Drive::turnInDirection(const float &dt, int rpm) {

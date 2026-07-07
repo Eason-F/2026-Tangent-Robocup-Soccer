@@ -6,7 +6,7 @@ void setup() {
     Serial.begin(115200);
     robot.setup();
 
-    if (CrashReport){
+    if (CrashReport) {
         Serial.print(CrashReport);
     }
 }

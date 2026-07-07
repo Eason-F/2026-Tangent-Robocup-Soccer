@@ -11,8 +11,7 @@ class Motor {
         float angularVelocityRPM;
 
         ~Motor();
-        Motor(const int &directionPin1, const int &directionPin2);
-        Motor(const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController *pidController);
+        Motor(const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController &pidController);
         void setup();
 
         float getRPM(const float &dt);
@@ -27,7 +26,8 @@ class Motor {
         const int DIRECTION_PIN2;
         const int ENCODER_PIN1;
         const int ENCODER_PIN2;
+        int lastInput;
 
         Encoder *encoder = nullptr;
-        PIDController *pidController = nullptr;
+        PIDController &pidController;
 };
