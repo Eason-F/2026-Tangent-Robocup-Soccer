@@ -5,7 +5,7 @@
 
 class Motor {
     public:
-        static constexpr int PULSE_PER_REVOLUTION = 1600;
+        static constexpr int PULSE_PER_REVOLUTION = 2000;
         static constexpr int MAX_RPM = 250;
 
         float angularVelocityRPM;

@@ -29,13 +29,13 @@ void Robot::run() {
     if (button.isPressed()) {
         if (elapsedLastTime >= LOOP_TIME_MS) {
             float dt = elapsedLastTime / 1000.0f;
-            elapsedLastTime = 0;
+            elapsedLastTime -= LOOP_TIME_MS;
 
             // conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
             // conditionallyBreakLoop(handleEdgeDetection(dt));
 
             // drive.moveInDirection(dt, irSensor.getDirectionDegrees(), MOVE_SPEED);
-            drive.moveToPoint(dt, MOVE_SPEED, 0.3, 0, odometry);
+            drive.moveToPoint(dt, MOVE_SPEED, 0.1, 0, odometry);
         }
     } else {
         drive.stop();

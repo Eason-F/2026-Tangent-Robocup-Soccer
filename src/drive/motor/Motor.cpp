@@ -56,7 +56,7 @@ void Motor::setMotorDutyCycle(int speed) {
 
 void Motor::setMotorRPM(int rpm, const float &dt) {
     float currentRPM = abs(getRPM(dt));
-    lastInput += (int) pidController.adjustmentValue(dt, currentRPM, abs(rpm));
+    lastInput += (int) pidController.adjustmentValue(dt, abs(rpm), currentRPM);
     if (rpm < 0) {
         analogWrite(DIRECTION_PIN1, lastInput);
         analogWrite(DIRECTION_PIN2, 0);
