@@ -23,6 +23,7 @@ Robot::Robot()
 
 void Robot::setup() {
     button.setup();
+    colourSensor.setup();
     drive.setup();
     irSensor.setup();
     imu.setup(); imu.resetYawOrigin();
