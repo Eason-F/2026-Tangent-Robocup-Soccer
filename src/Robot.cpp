@@ -10,7 +10,7 @@ bool Button::isPressed() {
     return !digitalRead(buttonPin);
 }
 
-Robot::Robot() : button(41), irSensor(Wire2), imu(Wire2), colourSensor(22) {}
+Robot::Robot() : button(41), irSensor(Wire2), imu(Wire2), colourSensor() {}
 
 void Robot::setup() {
     button.setup();
@@ -40,9 +40,10 @@ void Robot::run() {
         imu.resetYawOrigin();
     }
 
-    LOG("IRDir", irSensor.getDirectionDegrees()); LOG_NEXT;
+    LOG("IRDir", irSensor.getDirectionDegrees());
+    LOG("ColourAngleDeg", colourSensor.getDirectionDegrees());
+    LOG_NEXT;
     // LOG("IMU", imu.getRelativeYaw()); LOG("Heading Corrected", drive.headingCorrected(imu.getRelativeYaw())); LOG_NEXT;
-    // LOG("colour", colourSensor.sensorState()); LOG_NEXT;
     // LOG("Moving direction:", movedir); LOG_NEXT;    
     // LOG("Yaw:", heading); LOG_NEXT;  
     // LOG("Heading correction:", heading); LOG_NEXT;
@@ -54,11 +55,14 @@ bool Robot::handleEdgeDetection(float dt) {
         return false;
     }
 
+    const float colourDirection = colourSensor.getDirectionDegrees();
+    const float moveAwayDirection = colourDirection + 180.0f;
+
     drive.stop();
-    drive.moveInDirection(dt, drive.lastDirection - 180, BACK_SPEED);
+    drive.moveInDirection(dt, moveAwayDirection, BACK_SPEED);
     delay(500);
 
     LOG_PRINT("Colour sensor detected HIGH"); 
-    LOG("Moving back in direction:", drive.lastDirection - 180); LOG_NEXT;
+    LOG("Moving back in direction:", moveAwayDirection); LOG_NEXT;
     return true;
 }
