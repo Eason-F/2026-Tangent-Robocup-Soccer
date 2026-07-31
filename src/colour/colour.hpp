@@ -9,6 +9,7 @@ class ColourSensor {
         void update(long elapsedMillis);
         bool detectedEdge();
         Vector getVector();
+        float getDirectionDegrees();
 
     private:
         ColourModule front;

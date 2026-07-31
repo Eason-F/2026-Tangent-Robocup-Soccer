@@ -44,11 +44,12 @@ void Robot::run() {
         odometry.resetPosition();
     }
 
-    // LOG("irDirection", irSensor.getDirectionDegrees()); 
-    // LOG("heading", imu.getRelativeYaw()); 
-    // LOG("colour", colourSensor.sensorState()); 
-    LOG("odometryX", odometry.getX()); LOG("odometryY", odometry.getY()); LOG("odometryH", odometry.getHeading());
-    // LOG("rpm", drive.motor1.angularVelocityRPM);
+    // LOG("odometryX", odometry.getX()); LOG("odometryY", odometry.getY()); LOG("odometryH", odometry.getHeading());
+    // LOG("IRDir", irSensor.getDirectionDegrees());
+    // LOG("ColourAngleDeg", colourSensor.getDirectionDegrees());
+    // LOG("IMU", imu.getRelativeYaw()); LOG("Heading Corrected", drive.headingCorrected(imu.getRelativeYaw())); LOG_NEXT;
+    // LOG("Moving direction:", movedir); LOG_NEXT;    
+    // LOG("Heading correction:", heading); LOG_NEXT;
     LOG_NEXT;
 }
 
@@ -58,8 +59,11 @@ bool Robot::handleEdgeDetection(float dt) {
         return false;
     }
 
+    const float colourDirection = colourSensor.getDirectionDegrees();
+    const float moveAwayDirection = colourDirection + 180.0f;
+
     drive.stop();
-    drive.moveInDirection(dt, drive.lastDirection - 180, BACK_SPEED);
+    drive.moveInDirection(dt, moveAwayDirection, BACK_SPEED);
     delay(500);
 
     LOG("\n\nMoving back in direction:", drive.lastDirection - 180); LOG_NEXT;
