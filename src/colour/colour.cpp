@@ -33,3 +33,11 @@ Vector ColourSensor::getVector() {
         + back.getVector()
         + left.getVector();
 }
+
+float ColourSensor::getDirectionDegrees() {
+    if (!detectedEdge()) {
+        return -1.0f;
+    }
+
+    return degrees(getVector().angle);
+}

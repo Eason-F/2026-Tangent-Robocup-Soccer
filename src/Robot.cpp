@@ -82,8 +82,11 @@ bool Robot::handleEdgeDetection(float dt) {
         return false;
     }
 
+    const float colourDirection = colourSensor.getDirectionDegrees();
+    const float moveAwayDirection = colourDirection + 180.0f;
+
     drive.stop();
-    drive.moveInDirection(dt, drive.lastDirection - 180, BOUNDARY_BACK_SPD);
+    drive.moveInDirection(dt, moveAwayDirection, BACK_SPEED);
     delay(500);
 
     Logger::queue("movingBackDirection", drive.lastDirection - 180);
