@@ -39,6 +39,6 @@ class Robot {
         QikEasy irSensor;
         Drive drive;
         IMU imu;
+        OpticalOdometry odometry;
         ColourSensor colourSensor;
-        // OpticalOdometry odometry = OpticalOdometry(Wire);
 };

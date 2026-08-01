@@ -17,11 +17,13 @@ void Robot::setup() {
     colourSensor.setup();
     drive.setup();
     irSensor.setup();
+    odometry.setup();
     imu.setup(); imu.resetYawOrigin();
 }
 
 void Robot::run() {
     colourSensor.update(elapsedLastTime);
+    odometry.update();
     irSensor.updateReadings();
     imu.updateReadings();
 

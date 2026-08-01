@@ -1,12 +1,18 @@
 #include <odometry/Odometry.hpp>
 
-OpticalOdometry::OpticalOdometry(TwoWire &wirePort) {
+OpticalOdometry::OpticalOdometry(TwoWire &wirePort) : wirePort(wirePort) {}
+
+void OpticalOdometry::setup() {
     wirePort.begin();
     while (!odometrySensor.begin(wirePort)) {
-        Serial.println("Disconnected odometry");
+        LOG_PRINT("Disconnected odometry"); LOG_NEXT;
     };
     odometrySensor.calibrateImu();
     odometrySensor.resetTracking();
+
+    odometrySensor.setLinearScalar(-1.0);
+    odometrySensor.setLinearUnit(kSfeOtosLinearUnitMeters);
+    odometrySensor.setAngularUnit(kSfeOtosAngularUnitDegrees);
 }
 
 float OpticalOdometry::getX() {
@@ -17,7 +23,11 @@ float OpticalOdometry::getY() {
     return position.y;
 }
 
-void OpticalOdometry::updatePosition() {
+float OpticalOdometry::getHeading() {
+    return position.h;
+}
+
+void OpticalOdometry::update() {
     odometrySensor.getPosition(position);
 }
 
