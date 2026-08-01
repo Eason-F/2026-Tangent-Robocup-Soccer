@@ -4,13 +4,15 @@ PIDController::PIDController(const float &kP, const float &kI, const float &kD, 
     kP(kP), kI(kI), kD(kD), 
     max(max), min(min) {}
 
-float PIDController::adjustmentValue(float dt, float current, float target) {
+float PIDController::adjustmentValue(const float &dt, const float &target, const float &current) {
     float error = target - current;
     float derivative = (error - lastError) / dt;
-    value += kP * error + kI * integral + kD * derivative;
+    integral += error * dt;
+    value = kP * error + kI * integral + kD * derivative;
     value = constrain(value, min, max);
     lastError = error;
-    // LOG("pid value", value);
+    // LOG("value", value); LOG("err", error); 
+    // LOG("KP", kP * error); LOG("KI", kI * integral); LOG("KD", kD * derivative); 
     return value;
 };
 

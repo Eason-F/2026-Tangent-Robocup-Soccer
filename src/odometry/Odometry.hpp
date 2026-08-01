@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SparkFun_Qwiic_OTOS_Arduino_Library.h>
 #include <Wire.h>
 
@@ -20,5 +22,7 @@ class OpticalOdometry {
         TwoWire &wirePort;
         QwiicOTOS odometrySensor;
         sfe_otos_pose2d_t position;
+
+        static constexpr float LINEAR_MULTIPLIER = 1.9f;
 };
 

@@ -31,20 +31,23 @@ void Robot::run() {
             float dt = elapsedLastTime / 1000.0f;
             elapsedLastTime = 0;
 
-            conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
-            conditionallyBreakLoop(handleEdgeDetection(dt));
+            // conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
+            // conditionallyBreakLoop(handleEdgeDetection(dt));
 
-            drive.moveInDirection(dt, irSensor.getDirectionDegrees(), MOVE_SPEED);
+            // drive.moveInDirection(dt, irSensor.getDirectionDegrees(), MOVE_SPEED);
+            drive.moveToPoint(dt, MOVE_SPEED, 0.1, 0.5, odometry);
         }
     } else {
         drive.stop();
         imu.resetYawOrigin();
+        odometry.resetPosition();
     }
 
     // LOG("irDirection", irSensor.getDirectionDegrees()); 
     // LOG("heading", imu.getRelativeYaw()); 
     // LOG("colour", colourSensor.sensorState()); 
     LOG("odometryX", odometry.getX()); LOG("odometryY", odometry.getY()); LOG("odometryH", odometry.getHeading());
+    // LOG("rpm", drive.motor1.angularVelocityRPM);
     LOG_NEXT;
 }
 

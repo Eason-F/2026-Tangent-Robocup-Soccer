@@ -23,7 +23,7 @@ class PIDController {
     public:
         PIDController(const float &kP, const float &kI, const float &kD, const float &min, const float &max);
 
-        float adjustmentValue(float dt, float target, float current);
+        float adjustmentValue(const float &dt, const float &target, const float &current);
 };
 
 class Vector {
