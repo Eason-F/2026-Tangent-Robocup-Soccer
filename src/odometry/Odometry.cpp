@@ -4,23 +4,23 @@ OpticalOdometry::OpticalOdometry(TwoWire &wirePort) : wirePort(wirePort) {}
 
 void OpticalOdometry::setup() {
     wirePort.begin();
+    wirePort.setClock(1000000);
     while (!odometrySensor.begin(wirePort)) {
         LOG_PRINT("Disconnected odometry"); LOG_NEXT;
     };
     odometrySensor.calibrateImu();
     odometrySensor.resetTracking();
 
-    odometrySensor.setLinearScalar(-1.0);
     odometrySensor.setLinearUnit(kSfeOtosLinearUnitMeters);
     odometrySensor.setAngularUnit(kSfeOtosAngularUnitDegrees);
 }
 
 float OpticalOdometry::getX() {
-    return position.x;
+    return position.x * LINEAR_MULTIPLIER;
 }
 
 float OpticalOdometry::getY() {
-    return position.y;
+    return position.y * LINEAR_MULTIPLIER;
 }
 
 float OpticalOdometry::getHeading() {

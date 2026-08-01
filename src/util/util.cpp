@@ -11,7 +11,7 @@ float PIDController::adjustmentValue(const float &dt, const float &target, const
     value = kP * error + kI * integral + kD * derivative;
     value = constrain(value, min, max);
     lastError = error;
-    LOG("value", value); LOG("err", error); 
+    // LOG("value", value); LOG("err", error); 
     // LOG("KP", kP * error); LOG("KI", kI * integral); LOG("KD", kD * derivative); 
     return value;
 };

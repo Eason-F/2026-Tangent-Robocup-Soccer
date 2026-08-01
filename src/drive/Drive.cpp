@@ -28,12 +28,12 @@ void Drive::moveToPoint(const float &dt, const int &rpm, const float &targetX, c
     float velocityY = positionPIDY.adjustmentValue(dt, targetY, odometry.getY()) * rpm;
     float direction = degrees(atan2(velocityX, velocityY));
     float speed = min(hypot(velocityY, velocityX), rpm);
-    LOG("vx", velocityX); LOG("vy", velocityY); LOG("dir", direction); LOG("spd", speed); LOG_NEXT;
+    LOG("vx", velocityX); LOG("vy", velocityY); LOG("dir", direction); LOG("spd", speed);
 
-    if (speed < 10.0f) {
+    if (hypot(targetX - odometry.getX(), targetY - odometry.getY()) < 0.02f) {
         stop(); return;
     }
-    moveInDirection(dt, direction, max(speed, (int) rpm * 0.6f));
+    moveInDirection(dt, direction, max(speed, 40));
 }
 
 void Drive::moveToPoint(const float &dt, const int &rpm, const sfe_otos_pose2d_t &target, OpticalOdometry &odometry) {

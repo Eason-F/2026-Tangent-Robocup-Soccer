@@ -29,13 +29,13 @@ void Robot::run() {
     if (button.isPressed()) {
         if (elapsedLastTime >= LOOP_TIME_MS) {
             float dt = elapsedLastTime / 1000.0f;
-            elapsedLastTime -= LOOP_TIME_MS;
+            elapsedLastTime = 0;
 
             // conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
             // conditionallyBreakLoop(handleEdgeDetection(dt));
 
             // drive.moveInDirection(dt, irSensor.getDirectionDegrees(), MOVE_SPEED);
-            drive.moveToPoint(dt, MOVE_SPEED, 0.1, 0, odometry);
+            drive.moveToPoint(dt, MOVE_SPEED, 0.1, 0.5, odometry);
         }
     } else {
         drive.stop();
@@ -46,8 +46,9 @@ void Robot::run() {
     // LOG("irDirection", irSensor.getDirectionDegrees()); 
     // LOG("heading", imu.getRelativeYaw()); 
     // LOG("colour", colourSensor.sensorState()); 
-    // LOG("odometryX", odometry.getX()); LOG("odometryY", odometry.getY()); LOG("odometryH", odometry.getHeading());
-    // LOG_NEXT;
+    LOG("odometryX", odometry.getX()); LOG("odometryY", odometry.getY()); LOG("odometryH", odometry.getHeading());
+    // LOG("rpm", drive.motor1.angularVelocityRPM);
+    LOG_NEXT;
 }
 
 

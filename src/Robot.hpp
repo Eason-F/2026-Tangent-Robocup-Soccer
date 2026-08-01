@@ -28,7 +28,7 @@ class Robot {
 
     private:
         static constexpr uint LOOP_TIME_MS = 10;
-        static constexpr uint MOVE_SPEED = 60;
+        static constexpr uint MOVE_SPEED = 100;
         static constexpr uint BACK_SPEED = 100;
 
         elapsedMillis elapsedLastTime;

@@ -22,5 +22,7 @@ class OpticalOdometry {
         TwoWire &wirePort;
         QwiicOTOS odometrySensor;
         sfe_otos_pose2d_t position;
+
+        static constexpr float LINEAR_MULTIPLIER = 1.9f;
 };
 
