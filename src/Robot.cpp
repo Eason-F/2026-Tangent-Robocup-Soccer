@@ -10,7 +10,7 @@ bool Button::isPressed() {
     return !digitalRead(buttonPin);
 }
 
-Robot::Robot() : button(41), irSensor(Wire2), imu(Wire2), odometry(Wire), colourSensor(22){}
+Robot::Robot() : button(41), irSensor(Serial1), imu(Wire2), odometry(Wire), colourSensor(22){}
 
 void Robot::setup() {
     button.setup();

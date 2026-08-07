@@ -2,7 +2,7 @@
 
 #include <drive/Drive.hpp>
 #include <odometry/Odometry.hpp>
-#include <qikeasy/QikEasy.hpp>
+#include <ir/uart/UartIRSensor.hpp>
 #include <imu/imu.hpp>
 #include <util/util.hpp>
 #include <colour/colour.hpp>
@@ -36,7 +36,7 @@ class Robot {
         bool handleEdgeDetection(float dt);
 
         Button button;
-        QikEasy irSensor;
+        UartIRSensor irSensor;
         Drive drive;
         IMU imu;
         OpticalOdometry odometry;

@@ -1,4 +1,4 @@
-#include <qikeasy/QikEasy.hpp>
+#include <ir/qikeasy/QikEasy.hpp>
 
 QikEasy::QikEasy(TwoWire &wirePort) : wirePort(wirePort) {}
 
