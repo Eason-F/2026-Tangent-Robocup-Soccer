@@ -31,11 +31,10 @@ void Robot::run() {
             float dt = elapsedLastTime / 1000.0f;
             elapsedLastTime = 0;
 
-            // conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
-            // conditionallyBreakLoop(handleEdgeDetection(dt));
-
-            // drive.moveInDirection(dt, irSensor.getDirectionDegrees(), MOVE_SPEED);
-            drive.moveToPoint(dt, MOVE_SPEED, 0.1, 0.5, odometry);
+            conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
+            conditionallyBreakLoop(handleEdgeDetection(dt));
+            
+            maneuverAroundBall(dt, 0);
         }
     } else {
         drive.stop();
@@ -58,9 +57,68 @@ bool Robot::handleEdgeDetection(float dt) {
     }
 
     drive.stop();
-    drive.moveInDirection(dt, drive.lastDirection - 180, BACK_SPEED);
+    drive.moveInDirection(dt, drive.lastDirection - 180, BOUNDARY_BACK_SPD);
     delay(500);
 
     LOG("\n\nMoving back in direction:", drive.lastDirection - 180); LOG_NEXT;
     return true;
+}
+
+void Robot::maneuverAroundBall(const float dt, const float targetBallHeading) {
+    checkRobotState(dt, targetBallHeading);
+    switch (robotState) {
+        case SEARCH: {
+            drive.moveToPoint(dt, SEARCH_SPD, 0, 0, odometry);
+            break;
+        }
+        case APPROACH: {
+            float speed = approachPID.adjustmentValue(dt, ORBIT_DISTANCE, irSensor.getSignalStrength());
+            drive.moveInDirection(dt, irSensor.getDirectionDegrees(), speed);
+            break;
+        }
+        case ORBIT: {
+            float headingError = wrapAngle180(targetBallHeading - irSensor.getDirectionDegrees());
+            float approachSpeed = orbitDistancePID.adjustmentValue(dt, ORBIT_DISTANCE, irSensor.getSignalStrength());
+            float tangentSpeed = orbitTangentPID.adjustmentValue(dt, headingError);
+            float vx = approachSpeed * cos(radians(irSensor.getDirectionDegrees())) + tangentSpeed * -sin(radians(irSensor.getDirectionDegrees()));
+            float vy = approachSpeed * sin(radians(irSensor.getDirectionDegrees())) + tangentSpeed * cos(radians(irSensor.getDirectionDegrees()));
+            float movementAngle = degrees(atan2(vy, vx));
+            float movementSpeed = hypot(vx, vy);
+            drive.moveInDirection(dt, movementAngle, movementSpeed);
+            break;
+        }
+        case CAPTURED: {
+            drive.moveInDirection(dt, irSensor.getDirectionDegrees(), CAPTURED_SPD);
+            break;
+        }
+    }
+}
+
+void Robot::checkRobotState(const float dt, const float targetBallHeading) {
+    if (!irSensor.ballFound()) {
+        robotState = State::SEARCH;
+        accumulatedAlignedTime = 0; return;
+    } 
+    
+    if (robotState != State::CAPTURED) {
+        robotState = State::APPROACH;
+        if (abs(ORBIT_DISTANCE - irSensor.getSignalStrength()) < APPROACH_DISTANCE_TOLERANCE) {
+            robotState = State::ORBIT;
+        }
+    }
+    
+    float headingError = abs(wrapAngle180(targetBallHeading - irSensor.getDirectionDegrees()));
+    if (robotState == State::ORBIT) {
+        if (headingError > ENTER_ALIGNMENT_TOLERANCE) {
+             accumulatedAlignedTime = 0; return;
+        }
+        accumulatedAlignedTime += static_cast<unsigned long>(dt * 1000);
+        if (accumulatedAlignedTime >= ALIGNED_DEBOUNCE_MS) {
+            robotState = State::CAPTURED;
+        }
+    } else if (robotState == State::CAPTURED) {
+        if (headingError > EXIT_ALIGNMENT_TOLERANCE) {
+            robotState = State::ORBIT;
+        }
+    }
 }

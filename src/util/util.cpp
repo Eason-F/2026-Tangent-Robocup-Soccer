@@ -4,8 +4,7 @@ PIDController::PIDController(const float &kP, const float &kI, const float &kD, 
     kP(kP), kI(kI), kD(kD), 
     max(max), min(min) {}
 
-float PIDController::adjustmentValue(const float &dt, const float &target, const float &current) {
-    float error = target - current;
+float PIDController::adjustmentValue(const float &dt, const float &error) {
     float derivative = (error - lastError) / dt;
     integral += error * dt;
     value = kP * error + kI * integral + kD * derivative;
@@ -14,6 +13,10 @@ float PIDController::adjustmentValue(const float &dt, const float &target, const
     // LOG("value", value); LOG("err", error); 
     // LOG("KP", kP * error); LOG("KI", kI * integral); LOG("KD", kD * derivative); 
     return value;
+};
+
+float PIDController::adjustmentValue(const float &dt, const float &target, const float &current) {
+    return adjustmentValue(dt, target - current);
 };
 
 Vector::Vector() {
@@ -47,4 +50,12 @@ Vector Vector::operator*(const float &n) {
 
 Vector Vector::operator/(const float &n) {
     return Vector(Position {}, x / n, y / n);
+}
+
+float wrapAngle180(float angle) {
+    float wrapped = std::fmod(angle + 180.0, 360.0);
+    if (wrapped < 0.0) {
+        wrapped += 360.0;
+    }
+    return wrapped - 180.0;
 }

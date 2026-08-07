@@ -102,3 +102,7 @@ float QikEasy::getDirectionDegrees() {
 float QikEasy::getSignalStrength() {
     return signalVec.magnitude;
 }
+
+bool QikEasy::ballFound() {
+    return signalVec.magnitude > 0;
+}
