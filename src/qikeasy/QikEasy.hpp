@@ -11,6 +11,7 @@ class QikEasy {
         void updateReadings();
         float getDirectionDegrees();
         float getSignalStrength();
+        bool ballFound();
         static float strengthToDistance(const uint16_t &strength);
 
     private:
