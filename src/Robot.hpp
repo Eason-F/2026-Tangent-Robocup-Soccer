@@ -4,7 +4,6 @@
 #include <odometry/Odometry.hpp>
 #include <qikeasy/QikEasy.hpp>
 #include <imu/imu.hpp>
-#include <util/util.hpp>
 #include <colour/colour.hpp>
 
 
