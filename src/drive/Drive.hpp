@@ -3,6 +3,7 @@
 #include <drive/motor/Motor.hpp>
 #include <odometry/Odometry.hpp>
 #include <util/PID.hpp>
+#include <util/util.hpp>
 
 #define ENCODER_USE_INTERRUPTS
 
