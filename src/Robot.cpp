@@ -10,7 +10,7 @@ bool Button::isPressed() {
     return !digitalRead(buttonPin);
 }
 
-Robot::Robot() : button(41), irSensor(Wire2), imu(Wire2), odometry(Wire), colourSensor(22){}
+Robot::Robot() : button(41), irSensor(Serial4), imu(Wire2), odometry(Wire), colourSensor(22){}
 
 void Robot::setup() {
     button.setup();
@@ -43,10 +43,10 @@ void Robot::run() {
         odometry.resetPosition();
     }
 
-    // LOG("irDirection", irSensor.getDirectionDegrees()); 
+    LOG("dir", irSensor.getDirectionDegrees()); LOG("str", irSensor.getSignalStrength()); 
     // LOG("heading", imu.getRelativeYaw()); 
     // LOG("colour", colourSensor.sensorState()); 
-    LOG("odometryX", odometry.getX()); LOG("odometryY", odometry.getY()); LOG("odometryH", odometry.getHeading());
+    // LOG("odometryX", odometry.getX()); LOG("odometryY", odometry.getY()); LOG("odometryH", odometry.getHeading());
     // LOG("rpm", drive.motor1.angularVelocityRPM);
     LOG_NEXT;
 }

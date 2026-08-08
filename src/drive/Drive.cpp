@@ -28,7 +28,7 @@ void Drive::moveToPoint(const float &dt, const int &rpm, const float &targetX, c
     float velocityY = positionPIDY.adjustmentValue(dt, targetY, odometry.getY()) * rpm;
     float direction = degrees(atan2(velocityX, velocityY));
     float speed = min(hypot(velocityY, velocityX), rpm);
-    LOG("vx", velocityX); LOG("vy", velocityY); LOG("dir", direction); LOG("spd", speed);
+    // LOG("vx", velocityX); LOG("vy", velocityY); LOG("dir", direction); LOG("spd", speed);
 
     if (hypot(targetX - odometry.getX(), targetY - odometry.getY()) < 0.02f) {
         stop(); return;
