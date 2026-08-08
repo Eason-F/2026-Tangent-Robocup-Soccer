@@ -63,8 +63,9 @@ bool Drive::correctHeading(const float &dt, float heading) {
         return false;
     }
 
-    int adjustmentRate = abs((heading - targetHeading)) * HEADING_ADJUSTMENT_MULTIPLIER + TURN_SPEED;
+    int adjustmentRate = abs((heading - targetHeading)) * HEADING_ADJUSTMENT_MULTIPLIER * TURN_SPEED;
     adjustmentRate *= (heading > 0) ? -1 : 1;
+    LOG("Heading:", heading); LOG("Target:", targetHeading); LOG("Adjustment:", adjustmentRate); LOG_NEXT;
     turnInDirection(dt, adjustmentRate);
 
     return true;

@@ -68,8 +68,8 @@ class Drive {
         static constexpr int ENCODER_PIN1_4 = 39;
         static constexpr int ENCODER_PIN2_4 = 40;
 
-        static constexpr float HEADING_ADJUSTMENT_MULTIPLIER = 0.5f;
+        static constexpr float HEADING_ADJUSTMENT_MULTIPLIER = 0.1f;
         static constexpr int HEADING_TOLERANCE_DEGREES = 15;
-        static constexpr int TURN_SPEED = 30;
+        static constexpr int TURN_SPEED = 5;
         float targetHeading = 0;
 };

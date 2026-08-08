@@ -10,20 +10,20 @@ bool Button::isPressed() {
     return !digitalRead(buttonPin);
 }
 
-Robot::Robot() : button(41), irSensor(Wire2), imu(Wire2), odometry(Wire), colourSensor(22){}
+Robot::Robot() : button(41), irSensor(Wire2), imu(Wire2), colourSensor(22){}
 
 void Robot::setup() {
     button.setup();
     colourSensor.setup();
     drive.setup();
     irSensor.setup();
-    odometry.setup();
+    // odometry.setup();
     imu.setup(); imu.resetYawOrigin();
 }
 
 void Robot::run() {
     colourSensor.update(elapsedLastTime);
-    odometry.update();
+    // odometry.update();
     irSensor.updateReadings();
     imu.updateReadings();
 
@@ -35,13 +35,13 @@ void Robot::run() {
             conditionallyBreakLoop(handleEdgeDetection(dt));
             conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
 
-            // drive.moveInDirection(dt, irSensor.getDirectionDegrees(), MOVE_SPEED);
-            drive.moveToPoint(dt, MOVE_SPEED, 0.1, 0.5, odometry);
+            drive.moveInDirection(dt, 0, MOVE_SPEED);
+            // drive.moveToPoint(dt, MOVE_SPEED, 0.1, 0.5, odometry);
         }
     } else {
         drive.stop();
         imu.resetYawOrigin();
-        odometry.resetPosition();
+        // odometry.resetPosition();
     }
 
     // LOG("odometryX", odometry.getX()); LOG("odometryY", odometry.getY()); LOG("odometryH", odometry.getHeading());
@@ -66,7 +66,7 @@ bool Robot::handleEdgeDetection(float dt) {
     if (elapsedEscapeTime >= ESCAPE_DURATION) {
         return false;
     }
-
+    // drive.stop();
     drive.moveInDirection(dt, escapeDirection, BACK_SPEED);
     return true;
 }
