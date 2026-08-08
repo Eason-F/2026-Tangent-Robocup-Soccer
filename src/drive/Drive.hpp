@@ -2,6 +2,7 @@
 
 #include <drive/motor/Motor.hpp>
 #include <odometry/Odometry.hpp>
+#include <util/PID.hpp>
 #include <util/util.hpp>
 
 #define ENCODER_USE_INTERRUPTS
@@ -40,7 +41,7 @@ class Drive {
         bool headingCorrected(float heading);
         
         void moveInDirection(const float &dt, int directionDegrees, int rpm);
-        void moveToPoint(const float &dt, const int &rpm, const sfe_otos_pose2d_t &target, OpticalOdometry &odometry);
+        void moveToPoint(const float &dt, const int &rpm, const Position2D &target, OpticalOdometry &odometry);
         void moveToPoint(const float &dt, const int &rpm, const float &targetX, const float &targetY, OpticalOdometry &odometry);
         void turnInDirection(const float &dt, int rpm);
         void stop();

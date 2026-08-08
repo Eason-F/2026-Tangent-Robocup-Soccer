@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Wire.h>
-#include <util/util.hpp>
+#include <util/Vector.hpp>
 
 class QikEasy {
     public:

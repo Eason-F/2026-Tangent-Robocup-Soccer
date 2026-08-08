@@ -1,4 +1,5 @@
 #include <odometry/Odometry.hpp>
+#include <util/util.hpp>
 
 OpticalOdometry::OpticalOdometry(TwoWire &wirePort) : wirePort(wirePort) {}
 
