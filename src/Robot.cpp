@@ -76,20 +76,21 @@ void Robot::run() {
     });
 }
 
-
 bool Robot::handleEdgeDetection(float dt) {
-    if (!colourSensor.detectedEdge()) {
+    if (colourSensor.detectedEdge()) {
+        const Vector edgeVector = colourSensor.getVector();
+
+        if (edgeVector.magnitude > 0.1f) {
+            escapeDirection = degrees(edgeVector.angle) + 180.0f;
+        }
+        elapsedEscapeTime = 0;
+    }
+
+    if (elapsedEscapeTime >= ESCAPE_DURATION) {
         return false;
     }
 
-    const float colourDirection = colourSensor.getDirectionDegrees();
-    const float moveAwayDirection = colourDirection + 180.0f;
-
-    drive.stop();
-    drive.moveInDirection(dt, moveAwayDirection, BACK_SPEED);
-    delay(500);
-
-    Logger::queue("movingBackDirection", drive.lastDirection - 180);
+    drive.moveInDirection(dt, escapeDirection, BACK_SPEED);
     return true;
 }
 
