@@ -31,6 +31,10 @@ class Robot {
         static constexpr uint MOVE_SPEED = 100;
         static constexpr uint BACK_SPEED = 100;
 
+        static constexpr uint8_t ESCAPE_DURATION = 100;
+        float escapeDirection = 0.0f;
+        elapsedMillis elapsedEscapeTime = ESCAPE_DURATION;
+
         elapsedMillis elapsedLastTime;
 
         bool handleEdgeDetection(float dt);

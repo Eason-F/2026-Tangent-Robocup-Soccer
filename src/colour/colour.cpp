@@ -1,18 +1,43 @@
 #include <colour/colour.hpp>
 
-ColourSensor::ColourSensor(const int &pin) : pin(pin) {}
+ColourSensor::ColourSensor(const int &pinFront, const int &pinRight, const int &pinBack, const int &pinLeft) :
+    front(pinFront, 0.0f),
+    right(pinRight, PI / 2.0f),
+    back(pinBack, PI),
+    left(pinLeft, 3.0f * PI / 2.0f) {}
 
 void ColourSensor::setup() {
-    pinMode(pin, INPUT_PULLUP);
+    front.setup();
+    right.setup();
+    back.setup();
+    left.setup();
 }
 
 void ColourSensor::update(long elapsedMillis) {
-    if (!digitalReadFast(22)) {
-        accumulatedDetectionTime = 0; return;
-    }
-    accumulatedDetectionTime += elapsedMillis;
+    front.update(elapsedMillis);
+    right.update(elapsedMillis);
+    back.update(elapsedMillis);
+    left.update(elapsedMillis);
 }
 
 bool ColourSensor::detectedEdge() {
-    return accumulatedDetectionTime >= DEBOUNCE_BUFFER_MS;
-}  
+    return front.detectedEdge()
+        || right.detectedEdge()
+        || back.detectedEdge()
+        || left.detectedEdge();
+}
+
+Vector ColourSensor::getVector() {
+    return front.getVector()
+        + right.getVector()
+        + back.getVector()
+        + left.getVector();
+}
+
+float ColourSensor::getDirectionDegrees() {
+    if (!detectedEdge()) {
+        return -1.0f;
+    }
+
+    return degrees(getVector().angle);
+}

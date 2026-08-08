@@ -14,6 +14,7 @@ Robot::Robot() : button(41), irSensor(Wire2), imu(Wire2), odometry(Wire), colour
 
 void Robot::setup() {
     button.setup();
+    colourSensor.setup();
     drive.setup();
     irSensor.setup();
     odometry.setup();
@@ -31,8 +32,8 @@ void Robot::run() {
             float dt = elapsedLastTime / 1000.0f;
             elapsedLastTime = 0;
 
-            // conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
-            // conditionallyBreakLoop(handleEdgeDetection(dt));
+            conditionallyBreakLoop(handleEdgeDetection(dt));
+            conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
 
             // drive.moveInDirection(dt, irSensor.getDirectionDegrees(), MOVE_SPEED);
             drive.moveToPoint(dt, MOVE_SPEED, 0.1, 0.5, odometry);
@@ -43,24 +44,29 @@ void Robot::run() {
         odometry.resetPosition();
     }
 
-    // LOG("irDirection", irSensor.getDirectionDegrees()); 
-    // LOG("heading", imu.getRelativeYaw()); 
-    // LOG("colour", colourSensor.sensorState()); 
-    LOG("odometryX", odometry.getX()); LOG("odometryY", odometry.getY()); LOG("odometryH", odometry.getHeading());
-    // LOG("rpm", drive.motor1.angularVelocityRPM);
+    // LOG("odometryX", odometry.getX()); LOG("odometryY", odometry.getY()); LOG("odometryH", odometry.getHeading());
+    // LOG("IRDir", irSensor.getDirectionDegrees());
+    // LOG("ColourAngleDeg", colourSensor.getDirectionDegrees());
+    // LOG("IMU", imu.getRelativeYaw()); LOG("Heading Corrected", drive.headingCorrected(imu.getRelativeYaw())); LOG_NEXT;
+    // LOG("Moving direction:", movedir); LOG_NEXT;    
+    // LOG("Heading correction:", heading); LOG_NEXT;
     LOG_NEXT;
 }
 
-
 bool Robot::handleEdgeDetection(float dt) {
-    if (!colourSensor.detectedEdge()) {
+    if (colourSensor.detectedEdge()) {
+        const Vector edgeVector = colourSensor.getVector();
+
+        if (edgeVector.magnitude > 0.1f) {
+            escapeDirection = degrees(edgeVector.angle) + 180.0f;
+        }
+        elapsedEscapeTime = 0;
+    }
+
+    if (elapsedEscapeTime >= ESCAPE_DURATION) {
         return false;
     }
 
-    drive.stop();
-    drive.moveInDirection(dt, drive.lastDirection - 180, BACK_SPEED);
-    delay(500);
-
-    LOG("\n\nMoving back in direction:", drive.lastDirection - 180); LOG_NEXT;
+    drive.moveInDirection(dt, escapeDirection, BACK_SPEED);
     return true;
 }
