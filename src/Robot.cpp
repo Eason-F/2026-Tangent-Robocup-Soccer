@@ -89,7 +89,7 @@ bool Robot::handleEdgeDetection(float dt) {
     if (elapsedEscapeTime >= ESCAPE_DURATION) {
         return false;
     }
-
+    // drive.stop();
     drive.moveInDirection(dt, escapeDirection, BACK_SPEED);
     return true;
 }

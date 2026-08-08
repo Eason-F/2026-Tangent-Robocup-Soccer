@@ -67,7 +67,7 @@ class Robot {
         static constexpr uint8_t HEADING_TOLERANCE = 15;
         PIDController headingPID = PIDController(0.015, 0.001, 0.0, -1.0, 1.0);
 
-        static constexpr uint8_t ESCAPE_DURATION = 100;
+        static constexpr uint8_t ESCAPE_DURATION = 500;
         float escapeDirection = 0.0f;
         elapsedMillis elapsedEscapeTime = ESCAPE_DURATION;
 
