@@ -32,8 +32,8 @@ void Robot::run() {
             float dt = elapsedLastTime / 1000.0f;
             elapsedLastTime = 0;
 
-            // conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
-            // conditionallyBreakLoop(handleEdgeDetection(dt));
+            conditionallyBreakLoop(handleEdgeDetection(dt));
+            conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
 
             // drive.moveInDirection(dt, irSensor.getDirectionDegrees(), MOVE_SPEED);
             drive.moveToPoint(dt, MOVE_SPEED, 0.1, 0.5, odometry);
@@ -53,19 +53,20 @@ void Robot::run() {
     LOG_NEXT;
 }
 
-
 bool Robot::handleEdgeDetection(float dt) {
-    if (!colourSensor.detectedEdge()) {
+    if (colourSensor.detectedEdge()) {
+        const Vector edgeVector = colourSensor.getVector();
+
+        if (edgeVector.magnitude > 0.1f) {
+            escapeDirection = degrees(edgeVector.angle) + 180.0f;
+        }
+        elapsedEscapeTime = 0;
+    }
+
+    if (elapsedEscapeTime >= ESCAPE_DURATION) {
         return false;
     }
 
-    const float colourDirection = colourSensor.getDirectionDegrees();
-    const float moveAwayDirection = colourDirection + 180.0f;
-
-    drive.stop();
-    drive.moveInDirection(dt, moveAwayDirection, BACK_SPEED);
-    delay(500);
-
-    LOG("\n\nMoving back in direction:", drive.lastDirection - 180); LOG_NEXT;
+    drive.moveInDirection(dt, escapeDirection, BACK_SPEED);
     return true;
 }
