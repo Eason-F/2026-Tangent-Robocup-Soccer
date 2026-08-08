@@ -3,6 +3,7 @@
 #include <util/util.hpp>
 #include <util/Logger.hpp>
 #include <string>
+#include <util/PID.hpp>
 #include <Encoder.h>
 
 class Motor {

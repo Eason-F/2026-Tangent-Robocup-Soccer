@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <SparkFun_Qwiic_OTOS_Arduino_Library.h>
 
 #define LOG_NEXT Serial.println();
 #define LOG_PRINT(text) Serial.print(text);
@@ -8,44 +9,14 @@
 
 #define conditionallyBreakLoop(bool) if (bool) {return;}
 
-class PIDController {
-    private:
-        const float kP = 0;
-        const float kI = 0;
-        const float kD = 0;
-        const float max = 0.0f;
-        const float min = 0.0f;
+struct Position2D {
+    float x = 0.0f;
+    float y = 0.0f;
 
-        float value;
-        float lastError;
-        float integral;
+    constexpr Position2D() = default;
+    constexpr Position2D(float x, float y) : x(x), y(y) {}
 
-    public:
-        PIDController(const float &kP, const float &kI, const float &kD, const float &min, const float &max);
-
-        float adjustmentValue(const float &dt, const float &target, const float &current);
-        float adjustmentValue(const float &dt, const float &error);
+    constexpr sfe_otos_pose2d_t toPose2D(float heading) const {
+        return {x, y, heading};
+    }
 };
-
-class Vector {
-    public:
-        float x = 0;
-        float y = 0;
-        float angle = 0;
-        float magnitude = 0;
-
-        struct Position{}; // structs for constructor differentiation
-        struct AngMag{};
-        Vector();
-        Vector(Position, const float &posX, const float &posY);
-        Vector(AngMag, const float &angle, const float &length);
-
-        Vector operator+(const Vector &vec);
-        Vector operator-(const Vector &vec);
-        Vector operator*(const float &n);
-        Vector operator/(const float &n);
-};
-
-float wrapAngle180(const float angle);
-
-float mapRange(const float value, const float fromMin, const float fromMax, const float toMin, const float toMax);
