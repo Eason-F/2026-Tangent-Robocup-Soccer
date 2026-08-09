@@ -10,7 +10,13 @@ bool Button::isPressed() {
     return !digitalRead(buttonPin);
 }
 
-Robot::Robot() : button(41), irSensor(Serial4), imu(Wire2), odometry(Wire), colourSensor(22){}
+Robot::Robot()
+    : button(41),
+      irSensor(Serial4),
+      imu(Wire2),
+      odometry(Wire),
+      colourSensor(22),
+      logger(Serial, LOG_INTERVAL_MS) {}
 
 void Robot::setup() {
     button.setup();
@@ -43,13 +49,20 @@ void Robot::run() {
         odometry.resetPosition();
     }
 
-    LOG("dir", irSensor.getDirectionDegrees()); LOG("str", irSensor.getSignalStrength()); 
-    LOG("movmentDir", drive.lastDirection); LOG("state", robotState);
-    // LOG("heading", imu.getRelativeYaw()); 
-    // LOG("colour", colourSensor.sensorState()); 
-    // LOG("odometryX", odometry.getX()); LOG("odometryY", odometry.getY()); LOG("odometryH", odometry.getHeading());
-    // LOG("rpm", drive.motor1.angularVelocityRPM);
-    LOG_NEXT;
+    logger.update([this](Logger &log) {
+        log.log("dir", irSensor.getDirectionDegrees());
+        log.log("str", irSensor.getSignalStrength());
+        log.log("movementDir", drive.lastDirection);
+        log.log("state", static_cast<int>(robotState));
+
+        // Add or remove log.log(...) calls here to choose the telemetry fields.
+        // log.log("heading", imu.getRelativeYaw());
+        // log.log("colour", colourSensor.sensorState());
+        // log.log("odometryX", odometry.getX());
+        // log.log("odometryY", odometry.getY());
+        // log.log("odometryH", odometry.getHeading());
+        // log.log("rpm", drive.motor1.angularVelocityRPM);
+    });
 }
 
 
@@ -62,7 +75,7 @@ bool Robot::handleEdgeDetection(float dt) {
     drive.moveInDirection(dt, drive.lastDirection - 180, BOUNDARY_BACK_SPD);
     delay(500);
 
-    LOG("\n\nMoving back in direction:", drive.lastDirection - 180); LOG_NEXT;
+    Logger::queue("movingBackDirection", drive.lastDirection - 180);
     return true;
 }
 

@@ -1,4 +1,5 @@
 #include <util/util.hpp>
+#include <util/Logger.hpp>
 
 PIDController::PIDController(const float &kP, const float &kI, const float &kD, const float &min, const float &max) : 
     kP(kP), kI(kI), kD(kD), 
@@ -10,8 +11,10 @@ float PIDController::adjustmentValue(const float &dt, const float &error) {
     value = kP * error + kI * integral + kD * derivative;
     value = constrain(value, min, max);
     lastError = error;
-    // LOG("value", value); LOG("err", error); 
-    // LOG("KP", kP * error); LOG("KI", kI * integral); LOG("KD", kD * derivative); 
+    // Logger::queue("pid.value", value); Logger::queue("pid.error", error);
+    // Logger::queue("KP", kP * error);
+    // Logger::queue("KI", kI * integral);
+    // Logger::queue("KD", kD * derivative);
     return value;
 };
 

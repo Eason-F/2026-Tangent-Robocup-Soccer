@@ -4,6 +4,7 @@
 #include <odometry/Odometry.hpp>
 #include <ir/uart/UartIRSensor.hpp>
 #include <imu/imu.hpp>
+#include <util/Logger.hpp>
 #include <util/util.hpp>
 #include <colour/colour.hpp>
 
@@ -35,6 +36,7 @@ class Robot {
 
     private:
         static constexpr uint8_t LOOP_TIME_MS = 50;
+        static constexpr uint16_t LOG_INTERVAL_MS = 100;
 
         static constexpr uint8_t SEARCH_SPD = 100;
         static constexpr uint8_t APPROACH_SPD = 100;
@@ -68,4 +70,5 @@ class Robot {
         IMU imu;
         OpticalOdometry odometry;
         ColourSensor colourSensor;
+        Logger logger;
 };

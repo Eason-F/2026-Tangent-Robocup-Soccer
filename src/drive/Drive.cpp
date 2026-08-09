@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <drive/Drive.hpp>
+#include <util/Logger.hpp>
 
 Drive::Drive() :
     motor1(DIRECTION_PIN1_1, DIRECTION_PIN2_1, ENCODER_PIN1_1, ENCODER_PIN2_1, motorPID1),
@@ -28,7 +29,10 @@ void Drive::moveToPoint(const float &dt, const int &rpm, const float &targetX, c
     float velocityY = positionPIDY.adjustmentValue(dt, targetY, odometry.getY()) * rpm;
     float direction = degrees(atan2(velocityX, velocityY));
     float speed = min(hypot(velocityY, velocityX), rpm);
-    // LOG("vx", velocityX); LOG("vy", velocityY); LOG("dir", direction); LOG("spd", speed);
+    // Logger::queue("vx", velocityX);
+    // Logger::queue("vy", velocityY);
+    // Logger::queue("dir", direction);
+    // Logger::queue("spd", speed);
 
     if (hypot(targetX - odometry.getX(), targetY - odometry.getY()) < 0.02f) {
         stop(); return;
