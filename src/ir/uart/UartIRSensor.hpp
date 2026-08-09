@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <util/util.hpp>
 
 class UartIRSensor {
     public:
@@ -15,7 +16,7 @@ class UartIRSensor {
 
         float getDirectionDegrees() const;
         float getSignalStrength() const;
-        bool hasValidReading() const;
+        bool ballFound() const;
         uint32_t getLastUpdateMillis() const;
         void setBluetoothMessageHandler(BluetoothMessageHandler handler);
 

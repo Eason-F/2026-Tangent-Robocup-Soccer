@@ -34,19 +34,19 @@ class Robot {
         void run();
 
     private:
-        static constexpr uint8_t LOOP_TIME_MS = 10;
+        static constexpr uint8_t LOOP_TIME_MS = 50;
 
-        static constexpr uint8_t SEARCH_SPD = 60;
+        static constexpr uint8_t SEARCH_SPD = 100;
         static constexpr uint8_t APPROACH_SPD = 100;
         static constexpr uint8_t ORBIT_APPROACH_SPD = 100;
         static constexpr uint8_t ORBIT_SPD = 100;
         static constexpr uint8_t CAPTURED_SPD = 100;
         static constexpr uint8_t BOUNDARY_BACK_SPD = 100;
 
-        static constexpr uint8_t APPROACH_DISTANCE_TOLERANCE = 100;
         static constexpr uint8_t ENTER_ALIGNMENT_TOLERANCE = 10;
-        static constexpr uint8_t EXIT_ALIGNMENT_TOLERANCE = 18;
-        static constexpr uint8_t ORBIT_DISTANCE = 100;
+        static constexpr uint8_t EXIT_ALIGNMENT_TOLERANCE = 25;
+        static constexpr uint8_t ORBIT_DISTANCE = 60;
+        static constexpr uint8_t APPROACH_DISTANCE_TOLERANCE = 20;
 
         static constexpr uint8_t ALIGNED_DEBOUNCE_MS = 50;
         unsigned long accumulatedAlignedTime = 0;

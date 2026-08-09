@@ -46,4 +46,6 @@ class Vector {
         Vector operator/(const float &n);
 };
 
-float wrapAngle180(float angle);
+float wrapAngle180(const float angle);
+
+float mapRange(const float value, const float fromMin, const float fromMax, const float toMin, const float toMax);

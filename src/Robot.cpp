@@ -31,10 +31,11 @@ void Robot::run() {
             float dt = elapsedLastTime / 1000.0f;
             elapsedLastTime = 0;
 
-            conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
-            conditionallyBreakLoop(handleEdgeDetection(dt));
+            // conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
+            // conditionallyBreakLoop(handleEdgeDetection(dt));
             
             maneuverAroundBall(dt, 0);
+            // drive.motor1.setMotorRPM(60, dt);
         }
     } else {
         drive.stop();
@@ -43,6 +44,7 @@ void Robot::run() {
     }
 
     LOG("dir", irSensor.getDirectionDegrees()); LOG("str", irSensor.getSignalStrength()); 
+    LOG("movmentDir", drive.lastDirection); LOG("state", robotState);
     // LOG("heading", imu.getRelativeYaw()); 
     // LOG("colour", colourSensor.sensorState()); 
     // LOG("odometryX", odometry.getX()); LOG("odometryY", odometry.getY()); LOG("odometryH", odometry.getHeading());
@@ -83,7 +85,7 @@ void Robot::maneuverAroundBall(const float dt, const float targetBallHeading) {
             float vx = approachSpeed * cos(radians(irSensor.getDirectionDegrees())) + tangentSpeed * -sin(radians(irSensor.getDirectionDegrees()));
             float vy = approachSpeed * sin(radians(irSensor.getDirectionDegrees())) + tangentSpeed * cos(radians(irSensor.getDirectionDegrees()));
             float movementAngle = degrees(atan2(vy, vx));
-            float movementSpeed = hypot(vx, vy);
+            float movementSpeed = min(hypot(vx, vy), ORBIT_SPD);
             drive.moveInDirection(dt, movementAngle, movementSpeed);
             break;
         }
