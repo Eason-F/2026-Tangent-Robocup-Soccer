@@ -1,23 +1,25 @@
 #pragma once
 
 #include <Arduino.h>
+#include <cstring>
 
 class Logger {
     public:
         static constexpr size_t BUFFER_SIZE = 512;
+        static constexpr size_t MAX_QUEUED_FIELDS = 32;
 
         Logger(Print &output, const uint32_t intervalMs);
 
-        // Call update() every loop. Serial data is sent only when buffer space is
-        // available, so logging never waits for the serial port.
         template <typename Callback>
         void update(Callback callback) {
             flush();
+
             if (linePending) {
                 return;
             }
 
             const uint32_t now = millis();
+
             if (intervalMs != 0 && now - lastLogTime < intervalMs) {
                 return;
             }
@@ -25,9 +27,12 @@ class Logger {
             lastLogTime = now;
             firstField = true;
             lineBuffer.clear();
+
             callback(*this);
+
             appendQueuedFields();
             lineBuffer.println();
+
             linePending = true;
             flush();
         }
@@ -41,11 +46,10 @@ class Logger {
             lineBuffer.print(name);
             lineBuffer.print(": ");
             lineBuffer.print(value);
+
             firstField = false;
         }
 
-        // Queue a field from anywhere in the program. Queued fields are added to
-        // the next periodic log line produced by the active Logger instance.
         template <typename Value>
         static void queue(const char *name, const Value &value) {
             if (activeLogger == nullptr) {
@@ -70,9 +74,17 @@ class Logger {
                     return 1;
                 }
 
-                void clear() { length = 0; }
-                const uint8_t *getData() const { return data; }
-                size_t getLength() const { return length; }
+                void clear() {
+                    length = 0;
+                }
+
+                const uint8_t *getData() const {
+                    return data;
+                }
+
+                size_t getLength() const {
+                    return length;
+                }
 
                 void append(const BufferPrint &other) {
                     for (size_t i = 0; i < other.getLength(); ++i) {
@@ -87,6 +99,18 @@ class Logger {
 
         template <typename Value>
         void queueValue(const char *name, const Value &value) {
+            for (size_t i = 0; i < queuedFieldCount; ++i) {
+                if (strcmp(queuedFieldNames[i], name) == 0) {
+                    return;
+                }
+            }
+
+            if (queuedFieldCount >= MAX_QUEUED_FIELDS) {
+                return;
+            }
+
+            queuedFieldNames[queuedFieldCount++] = name;
+
             if (!firstQueuedField) {
                 queuedFields.print("  | ");
             }
@@ -94,6 +118,7 @@ class Logger {
             queuedFields.print(name);
             queuedFields.print(": ");
             queuedFields.print(value);
+
             firstQueuedField = false;
         }
 
@@ -103,12 +128,19 @@ class Logger {
         static Logger *activeLogger;
 
         Print &output;
+
         BufferPrint lineBuffer;
         BufferPrint queuedFields;
+
         uint32_t intervalMs;
         uint32_t lastLogTime;
+
         size_t sentLength = 0;
+        size_t queuedFieldCount = 0;
+
         bool linePending = false;
         bool firstField = true;
         bool firstQueuedField = true;
+
+        const char *queuedFieldNames[MAX_QUEUED_FIELDS];
 };
