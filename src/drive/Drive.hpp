@@ -8,7 +8,7 @@
 
 class Drive {
     public:
-        static constexpr float motorKP = 0.2f;
+        static constexpr float motorKP = 0.3f;
         static constexpr float motorKI = 0.0f;
         static constexpr float motorKD = 0.0f;
         static constexpr float motorMax = 255.0f;
@@ -69,7 +69,7 @@ class Drive {
         static constexpr int ENCODER_PIN2_4 = 40;
 
         static constexpr float HEADING_ADJUSTMENT_MULTIPLIER = 0.5f;
-        static constexpr int HEADING_TOLERANCE_DEGREES = 15;
+        static constexpr int HEADING_TOLERANCE_DEGREES = 25;
         static constexpr int TURN_SPEED = 30;
         float targetHeading = 0;
 };

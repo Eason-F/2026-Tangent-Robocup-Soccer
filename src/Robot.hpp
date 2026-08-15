@@ -40,7 +40,7 @@ class Robot {
 
         static constexpr uint8_t SEARCH_SPD = 100;
         static constexpr uint8_t APPROACH_SPD = 100;
-        static constexpr uint8_t ORBIT_APPROACH_SPD = 100;
+        static constexpr uint8_t ORBIT_APPROACH_SPD = 60;
         static constexpr uint8_t ORBIT_SPD = 100;
         static constexpr uint8_t CAPTURED_SPD = 100;
         static constexpr uint8_t BOUNDARY_BACK_SPD = 100;
@@ -53,7 +53,7 @@ class Robot {
         static constexpr uint8_t ALIGNED_DEBOUNCE_MS = 50;
         unsigned long accumulatedAlignedTime = 0;
 
-        PIDController approachPID = PIDController(3, 0, 0, -1.0, 1.0);
+        PIDController approachPID = PIDController(0.2, 0, 0, 0.0, 1.0);
         PIDController orbitTangentPID = PIDController(0.5, 0, 0, -1.0, 1.0);
         PIDController orbitDistancePID = PIDController(0.1, 0, 0, -0.2, 1.0);
 
