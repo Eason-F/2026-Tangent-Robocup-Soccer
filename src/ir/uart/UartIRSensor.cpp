@@ -127,8 +127,12 @@ float UartIRSensor::getDirectionDegrees() const {
     return directionDegrees;
 }
 
+float UartIRSensor::getDirectionRadians() const {
+    return radians(directionDegrees);
+}
+
 float UartIRSensor::getSignalStrength() const {
-    return mapRange(signalStrength, 0, 500, 0, 100);
+    return mapRange(signalStrength, 0, 400, 0, 100);
 }
 
 bool UartIRSensor::ballFound() const {

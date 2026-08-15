@@ -36,7 +36,7 @@ class Robot {
 
     private:
         static constexpr uint8_t LOOP_TIME_MS = 50;
-        static constexpr uint16_t LOG_INTERVAL_MS = 100;
+        static constexpr uint16_t LOG_INTERVAL_MS = 50;
 
         static constexpr uint8_t SEARCH_SPD = 100;
         static constexpr uint8_t APPROACH_SPD = 100;
@@ -53,9 +53,9 @@ class Robot {
         static constexpr uint8_t ALIGNED_DEBOUNCE_MS = 50;
         unsigned long accumulatedAlignedTime = 0;
 
-        PIDController approachPID = PIDController(1, 0, 0, -APPROACH_SPD, APPROACH_SPD);
-        PIDController orbitTangentPID = PIDController(1, 0, 0, -ORBIT_SPD, ORBIT_SPD);
-        PIDController orbitDistancePID = PIDController(1, 0, 0, -ORBIT_APPROACH_SPD, ORBIT_APPROACH_SPD);
+        PIDController approachPID = PIDController(3, 0, 0, -1.0, 1.0);
+        PIDController orbitTangentPID = PIDController(0.5, 0, 0, -1.0, 1.0);
+        PIDController orbitDistancePID = PIDController(0.1, 0, 0, -0.2, 1.0);
 
         elapsedMillis elapsedLastTime;
         State robotState = State::SEARCH;

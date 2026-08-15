@@ -56,11 +56,7 @@ Vector Vector::operator/(const float &n) {
 }
 
 float wrapAngle180(const float angle) {
-    float wrapped = std::fmod(angle + 180.0, 360.0);
-    if (wrapped < 0.0) {
-        wrapped += 360.0;
-    }
-    return wrapped - 180.0;
+    return std::remainder(angle, 360.0);
 }
 
 float mapRange(const float value, const float fromMin, const float fromMax, const float toMin, const float toMax) {

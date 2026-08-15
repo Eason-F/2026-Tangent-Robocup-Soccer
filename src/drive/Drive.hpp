@@ -9,7 +9,7 @@
 class Drive {
     public:
         static constexpr float motorKP = 0.2f;
-        static constexpr float motorKI = 0.0001f;
+        static constexpr float motorKI = 0.0f;
         static constexpr float motorKD = 0.0f;
         static constexpr float motorMax = 255.0f;
         static constexpr float motorMin = -255.0f;

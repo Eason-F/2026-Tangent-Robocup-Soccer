@@ -41,6 +41,7 @@ void Robot::run() {
             // conditionallyBreakLoop(handleEdgeDetection(dt));
             
             maneuverAroundBall(dt, 0);
+            // drive.moveInDirection(dt, irSensor.getDirectionDegrees(), 100);
             // drive.motor1.setMotorRPM(60, dt);
         }
     } else {
@@ -50,10 +51,10 @@ void Robot::run() {
     }
 
     logger.update([this](Logger &log) {
-        log.log("dir", irSensor.getDirectionDegrees());
+        // log.log("dir", irSensor.getDirectionDegrees());
         log.log("str", irSensor.getSignalStrength());
         log.log("movementDir", drive.lastDirection);
-        log.log("state", static_cast<int>(robotState));
+        // log.log("state", static_cast<int>(robotState));
 
         // Add or remove log.log(...) calls here to choose the telemetry fields.
         // log.log("heading", imu.getRelativeYaw());
@@ -92,14 +93,18 @@ void Robot::maneuverAroundBall(const float dt, const float targetBallHeading) {
             break;
         }
         case ORBIT: {
-            float headingError = wrapAngle180(targetBallHeading - irSensor.getDirectionDegrees());
-            float approachSpeed = orbitDistancePID.adjustmentValue(dt, ORBIT_DISTANCE, irSensor.getSignalStrength());
-            float tangentSpeed = orbitTangentPID.adjustmentValue(dt, headingError);
-            float vx = approachSpeed * cos(radians(irSensor.getDirectionDegrees())) + tangentSpeed * -sin(radians(irSensor.getDirectionDegrees()));
-            float vy = approachSpeed * sin(radians(irSensor.getDirectionDegrees())) + tangentSpeed * cos(radians(irSensor.getDirectionDegrees()));
-            float movementAngle = degrees(atan2(vy, vx));
-            float movementSpeed = min(hypot(vx, vy), ORBIT_SPD);
+            float headingError = wrapAngle180(irSensor.getDirectionDegrees() - targetBallHeading);
+            float approachSpeed = orbitDistancePID.adjustmentValue(dt, ORBIT_DISTANCE - irSensor.getSignalStrength()) * ORBIT_APPROACH_SPD;
+            float tangentSpeed = orbitTangentPID.adjustmentValue(dt, headingError) * ORBIT_SPD;
+            Vector approachVector = Vector(Vector::AngMag {}, irSensor.getDirectionRadians(), approachSpeed);
+            Vector tangentVector = Vector(Vector::Position {}, -sin(irSensor.getDirectionRadians()), cos(irSensor.getDirectionRadians())) * tangentSpeed;
+            Vector finalVector = tangentVector + approachVector;
+
+            float movementAngle = degrees(finalVector.angle);
+            float movementSpeed = min(finalVector.magnitude, ORBIT_SPD);
             drive.moveInDirection(dt, movementAngle, movementSpeed);
+            logger.queue("approachspd", approachSpeed);
+            logger.queue("tangentspd", tangentSpeed);
             break;
         }
         case CAPTURED: {
@@ -110,6 +115,8 @@ void Robot::maneuverAroundBall(const float dt, const float targetBallHeading) {
 }
 
 void Robot::checkRobotState(const float dt, const float targetBallHeading) {
+    robotState = State::ORBIT;
+    return;
     if (!irSensor.ballFound()) {
         robotState = State::SEARCH;
         accumulatedAlignedTime = 0; return;

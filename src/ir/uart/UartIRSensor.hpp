@@ -15,6 +15,7 @@ class UartIRSensor {
         void updateReadings();
 
         float getDirectionDegrees() const;
+        float getDirectionRadians() const;
         float getSignalStrength() const;
         bool ballFound() const;
         uint32_t getLastUpdateMillis() const;
