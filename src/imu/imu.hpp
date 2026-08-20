@@ -10,7 +10,7 @@ class IMU {
         IMU(TwoWire &wirePort);
 
         bool setup();
-        void updateReadings();
+        void update();
 
         float getYaw();
         float getRelativeYaw();

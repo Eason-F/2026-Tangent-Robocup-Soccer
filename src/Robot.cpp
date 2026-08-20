@@ -14,23 +14,30 @@ Robot::Robot()
     : button(41),
       irSensor(Serial4),
       imu(Wire2),
-      odometry(Wire),
       colourSensor(22),
-      logger(Serial, LOG_INTERVAL_MS) {}
+      logger(Serial, LOG_INTERVAL_MS) {
+    if (WITH_ODOMETRY) {
+        odometry = std::make_unique<OpticalOdometry>(Wire2);
+    }
+}
 
 void Robot::setup() {
     button.setup();
     drive.setup();
     irSensor.setup();
-    odometry.setup();
     imu.setup(); imu.resetYawOrigin();
+    if (odometry != nullptr) {
+        odometry-> setup();
+    }
 }
 
 void Robot::run() {
     colourSensor.update(elapsedLastTime);
-    odometry.update();
-    irSensor.updateReadings();
-    imu.updateReadings();
+    irSensor.update();
+    imu.update();
+    if (odometry != nullptr) {
+        odometry-> update();
+    }
 
     if (button.isPressed()) {
         if (elapsedLastTime >= LOOP_TIME_MS) {
@@ -40,14 +47,16 @@ void Robot::run() {
             // conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
             // conditionallyBreakLoop(handleEdgeDetection(dt));
             
-            maneuverAroundBall(dt, 0);
+            // maneuverAroundBall(dt, 0);
             // drive.moveInDirection(dt, irSensor.getDirectionDegrees(), 100);
-            // drive.motor1.setMotorRPM(100, dt);
+            drive.motor1.setMotorRPM(100, dt);
         }
     } else {
         drive.stop();
         imu.resetYawOrigin();
-        odometry.resetPosition();
+        if (odometry != nullptr) {
+            odometry-> resetPosition();
+        }
     }
 
     logger.update([this](Logger &log) {
@@ -62,7 +71,7 @@ void Robot::run() {
         // log.log("odometryY", odometry.getY());
         // log.log("odometryH", odometry.getHeading());
         log.log("rpm", drive.motor1.angularVelocityRPM);
-        log.log("tanDir", degrees(atan2(-cos(irSensor.getDirectionRadians()), sin(irSensor.getDirectionRadians()))));
+        log.log("ballFound", irSensor.ballFound());
     });
 }
 
@@ -84,7 +93,11 @@ void Robot::maneuverAroundBall(const float dt, const float targetBallHeading) {
     checkRobotState(dt, targetBallHeading);
     switch (robotState) {
         case SEARCH: {
-            drive.moveToPoint(dt, SEARCH_SPD, 0, 0, odometry);
+            if (odometry != nullptr) {
+                drive.moveToPoint(dt, SEARCH_SPD, 0, 0, *odometry);
+            } else {
+                drive.stop();
+            }
             break;
         }
         case APPROACH: {

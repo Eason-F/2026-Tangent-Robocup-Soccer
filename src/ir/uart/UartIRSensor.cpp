@@ -8,7 +8,7 @@ void UartIRSensor::setup() {
     resetReceiver();
 }
 
-void UartIRSensor::updateReadings() {
+void UartIRSensor::update() {
     while (serialPort.available() > 0) {
         processByte(static_cast<uint8_t>(serialPort.read()));
     }

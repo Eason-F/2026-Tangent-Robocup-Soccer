@@ -12,7 +12,7 @@ class UartIRSensor {
                               uint32_t baudRate = 115200);
 
         void setup();
-        void updateReadings();
+        void update();
 
         float getDirectionDegrees() const;
         float getDirectionRadians() const;

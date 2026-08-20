@@ -14,11 +14,11 @@ bool IMU::setup() {
 
     delay(50);
     bno.setExtCrystalUse(true);
-    resetYawOrigin(); updateReadings();
+    resetYawOrigin(); update();
     return true;
 }
 
-void IMU::updateReadings() {
+void IMU::update() {
     imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
     yaw = normaliseYaw(euler.x());
 }

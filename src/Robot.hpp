@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <memory>
 
 #include <drive/Drive.hpp>
 #include <odometry/Odometry.hpp>
@@ -7,7 +8,6 @@
 #include <util/Logger.hpp>
 #include <util/util.hpp>
 #include <colour/colour.hpp>
-
 
 class Button {
     private:
@@ -35,6 +35,8 @@ class Robot {
         void run();
 
     private:
+        static constexpr bool WITH_ODOMETRY = false;
+
         static constexpr uint8_t LOOP_TIME_MS = 50;
         static constexpr uint16_t LOG_INTERVAL_MS = 50;
 
@@ -68,7 +70,7 @@ class Robot {
         UartIRSensor irSensor;
         Drive drive;
         IMU imu;
-        OpticalOdometry odometry;
+        std::unique_ptr<OpticalOdometry> odometry;
         ColourSensor colourSensor;
         Logger logger;
 };
