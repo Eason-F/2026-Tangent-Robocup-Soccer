@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-#include "colourModule/colourModule.hpp"
+#include "colourModule/ColourModule.hpp"
 
 class ColourSensor {
     public:

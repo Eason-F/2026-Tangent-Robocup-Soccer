@@ -1,4 +1,4 @@
-#include <colour/colour.hpp>
+#include "colour.hpp"
 
 ColourSensor::ColourSensor(const int &pinFront, const int &pinRight, const int &pinBack, const int &pinLeft) :
     front(pinFront, 0.0f),
