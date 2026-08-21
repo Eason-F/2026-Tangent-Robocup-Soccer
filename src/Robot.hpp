@@ -40,7 +40,7 @@ class Robot {
         static constexpr uint8_t LOOP_TIME_MS = 20;
         static constexpr uint16_t LOG_INTERVAL_MS = 100;
 
-        static constexpr uint8_t BOUNDARY_BACK_SPD = 100;
+        static constexpr uint8_t BOUNDARY_ESCAPE_SPD = 100;
 
         static constexpr uint8_t SEARCH_SPD = 100;
         static constexpr uint8_t APPROACH_SPD = 150;
@@ -66,6 +66,10 @@ class Robot {
         static constexpr uint8_t TURN_SPD = 100;
         static constexpr uint8_t HEADING_TOLERANCE = 15;
         PIDController headingPID = PIDController(0.015, 0.001, 0.0, -1.0, 1.0);
+
+        static constexpr uint16_t ESCAPE_DURATION = 100;
+        float escapeDirection = 0.0f;
+        elapsedMillis elapsedEscapeTime = ESCAPE_DURATION;
 
         elapsedMillis elapsedLastTime;
         State robotState = State::SEARCH;

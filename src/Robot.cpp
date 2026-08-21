@@ -23,6 +23,7 @@ Robot::Robot()
 
 void Robot::setup() {
     button.setup();
+    colourSensor.setup();
     drive.setup();
     irSensor.setup();
     imu.setup(); imu.resetYawOrigin();
@@ -75,17 +76,20 @@ void Robot::run() {
     });
 }
 
-
 bool Robot::handleEdgeDetection(float dt) {
-    if (!colourSensor.detectedEdge()) {
-        return false;
+    if (colourSensor.detectedEdge()) {
+        const Vector edgeVector = colourSensor.getVector();
+
+        if (edgeVector.magnitude > 0.1f) {
+            escapeDirection = degrees(edgeVector.angle) + 180.0f;
+        }
+        elapsedEscapeTime = 0;
     }
 
-    drive.stop();
-    drive.moveInDirection(dt, drive.lastDirection - 180, BOUNDARY_BACK_SPD);
-    delay(500);
-
-    Logger::queue("movingBackDirection", drive.lastDirection - 180);
+    if (elapsedEscapeTime >= ESCAPE_DURATION) {
+        return false;
+    }
+    drive.moveInDirection(dt, escapeDirection, BOUNDARY_ESCAPE_SPD);
     return true;
 }
 
