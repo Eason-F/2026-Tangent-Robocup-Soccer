@@ -41,15 +41,15 @@ class Robot {
         static constexpr uint16_t LOG_INTERVAL_MS = 100;
 
         static constexpr uint8_t SEARCH_SPD = 100;
-        static constexpr uint8_t APPROACH_SPD = 100;
-        static constexpr uint8_t ORBIT_APPROACH_SPD = 100;
-        static constexpr uint8_t ORBIT_SPD = 100;
+        static constexpr uint8_t APPROACH_SPD = 150;
+        static constexpr uint8_t ORBIT_APPROACH_SPD = 120;
+        static constexpr uint8_t ORBIT_SPD = 80;
         static constexpr uint8_t CAPTURED_SPD = 100;
 
         static constexpr uint8_t BOUNDARY_BACK_SPD = 100;
 
-        static constexpr uint8_t ORBIT_DISTANCE = 80;
-        static constexpr uint8_t APPROACH_DISTANCE_TOLERANCE = 20;
+        static constexpr uint8_t ORBIT_DISTANCE = 90;
+        static constexpr uint8_t APPROACH_DISTANCE_TOLERANCE = 35;
         static constexpr uint8_t ORBIT_DEBOUNCE_MS = 200;
         unsigned long accumulatedOrbitTime = 0;
 
@@ -59,8 +59,8 @@ class Robot {
         unsigned long accumulatedAlignedTime = 0;
 
         PIDController approachPID = PIDController(0.03, 0, 0, 0.0, 1.0);
-        PIDController orbitTangentPID = PIDController(0.1, 0, 0, -1.0, 1.0);
-        PIDController orbitDistancePID = PIDController(0.02, 0, 0, 0.0, 1.0);
+        PIDController orbitTangentPID = PIDController(0.1, 0, 0.0, -1.0, 1.0);
+        PIDController orbitDistancePID = PIDController(0.2, 0, 0.0, -1.0, 1.0);
 
         elapsedMillis elapsedLastTime;
         State robotState = State::SEARCH;

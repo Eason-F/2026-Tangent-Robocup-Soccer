@@ -107,9 +107,17 @@ void Robot::maneuverAroundBall(const float dt, const float targetBallHeading) {
         }
         case ORBIT: {
             float headingError = wrapAngle180(irSensor.getDirectionDegrees() - targetBallHeading);
-            float approachSpeed = orbitDistancePID.adjustmentValue(dt, ORBIT_DISTANCE - irSensor.getSignalStrength()) * ORBIT_APPROACH_SPD;
-            float tangentSpeed = -orbitTangentPID.adjustmentValue(dt, headingError) * ORBIT_SPD;
-            Vector approachVector = Vector(Vector::Position {}, sin(irSensor.getDirectionRadians()), cos(irSensor.getDirectionRadians())) * approachSpeed;
+            float distanceError = ORBIT_DISTANCE - irSensor.getSignalStrength();
+
+            float approach = orbitDistancePID.adjustmentValue(dt, distanceError);
+            float tangent = -orbitTangentPID.adjustmentValue(dt, headingError);
+
+            float orbitFactor = 1.0f - min(abs(distanceError) / ORBIT_DISTANCE, 1.0f);
+            tangent *= orbitFactor;
+
+            float approachSpeed = approach * ORBIT_APPROACH_SPD;
+            float tangentSpeed = tangent * ORBIT_SPD;
+            Vector approachVector = Vector(Vector::AngMag {}, irSensor.getDirectionRadians(), approachSpeed);
             Vector tangentVector = Vector(Vector::Position {}, sin(irSensor.getDirectionRadians()), -cos(irSensor.getDirectionRadians())) * tangentSpeed;
             Vector finalVector = tangentVector + approachVector;
 
