@@ -6,7 +6,8 @@ Motor::~Motor() {
     delete encoder;
 }
 
-Motor::Motor(const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController &pidController) :
+Motor::Motor(const String &name, const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController &pidController) :
+    name(name),
     DIRECTION_PIN1(directionPin1),
     DIRECTION_PIN2(directionPin2),
     ENCODER_PIN1(encoderPin1),
@@ -55,15 +56,17 @@ void Motor::setMotorDutyCycle(int speed) {
 }
 
 void Motor::setMotorRPM(int rpm, const float &dt) {
-    float currentRPM = abs(getRPM(dt));
-    lastInput += (int) pidController.adjustmentValue(dt, abs(rpm), currentRPM);
-    lastInput = min(lastInput, 255);
-    if (rpm < 0) {
-        analogWrite(DIRECTION_PIN1, lastInput);
+    float currentRPM = getRPM(dt);
+    float pidOutput = constrain(pidController.adjustmentValue(dt, rpm, currentRPM), -MAX_PWM_CHANGE, MAX_PWM_CHANGE);
+    lastInput += pidOutput;
+    lastInput = constrain(lastInput, -255.0f, 255.0f);
+
+    if (lastInput < 0) {
+        analogWrite(DIRECTION_PIN1, (int)abs(lastInput));
         analogWrite(DIRECTION_PIN2, 0);
-    } else if (rpm > 0) {
+    } else if (lastInput > 0) {
         analogWrite(DIRECTION_PIN1, 0);
-        analogWrite(DIRECTION_PIN2, lastInput);
+        analogWrite(DIRECTION_PIN2, (int)lastInput);
     } else {
         brake();
     }

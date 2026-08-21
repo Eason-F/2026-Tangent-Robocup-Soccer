@@ -8,7 +8,7 @@ void UartIRSensor::setup() {
     resetReceiver();
 }
 
-void UartIRSensor::updateReadings() {
+void UartIRSensor::update() {
     while (serialPort.available() > 0) {
         processByte(static_cast<uint8_t>(serialPort.read()));
     }
@@ -127,11 +127,15 @@ float UartIRSensor::getDirectionDegrees() const {
     return directionDegrees;
 }
 
+float UartIRSensor::getDirectionRadians() const {
+    return radians(directionDegrees);
+}
+
 float UartIRSensor::getSignalStrength() const {
     return signalStrength;
 }
 
-bool UartIRSensor::hasValidReading() const {
+bool UartIRSensor::ballFound() const {
     return readingValid;
 }
 

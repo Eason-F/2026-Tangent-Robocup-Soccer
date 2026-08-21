@@ -8,8 +8,8 @@
 
 class Drive {
     public:
-        static constexpr float motorKP = 0.2f;
-        static constexpr float motorKI = 0.0001f;
+        static constexpr float motorKP = 0.3f;
+        static constexpr float motorKI = 0.001f;
         static constexpr float motorKD = 0.0f;
         static constexpr float motorMax = 255.0f;
         static constexpr float motorMin = -255.0f;
@@ -36,8 +36,6 @@ class Drive {
         void setup();
 
         void updateRPM(const float &dt);
-        bool correctHeading(const float &dt, float heading);
-        bool headingCorrected(float heading);
         
         void moveInDirection(const float &dt, int directionDegrees, int rpm);
         void moveToPoint(const float &dt, const int &rpm, const sfe_otos_pose2d_t &target, OpticalOdometry &odometry);
@@ -45,7 +43,8 @@ class Drive {
         void turnInDirection(const float &dt, int rpm);
         void stop();
 
-        float lastDirection;
+        float lastDirection = 0;
+        float rotationRpm = 0;
 
     private: 
         static constexpr int DIRECTION_PIN1_1 = 2;
@@ -67,9 +66,4 @@ class Drive {
         static constexpr int DIRECTION_PIN2_4 = 9;
         static constexpr int ENCODER_PIN1_4 = 39;
         static constexpr int ENCODER_PIN2_4 = 40;
-
-        static constexpr float HEADING_ADJUSTMENT_MULTIPLIER = 0.5f;
-        static constexpr int HEADING_TOLERANCE_DEGREES = 15;
-        static constexpr int TURN_SPEED = 30;
-        float targetHeading = 0;
 };

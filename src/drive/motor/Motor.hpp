@@ -1,17 +1,20 @@
 #pragma once
 
 #include <util/util.hpp>
+#include <util/Logger.hpp>
+#include <string>
 #include <Encoder.h>
 
 class Motor {
     public:
         static constexpr int PULSE_PER_REVOLUTION = 2000;
         static constexpr int MAX_RPM = 250;
+        const String name;
 
         float angularVelocityRPM;
 
         ~Motor();
-        Motor(const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController &pidController);
+        Motor(const String &name, const int &directionPin1, const int &directionPin2,  const int &encoderPin1, const int &encoderPin2, PIDController &pidController);
         void setup();
 
         float getRPM(const float &dt);
@@ -21,12 +24,15 @@ class Motor {
 
         void brake();
 
-    private: 
+    private:
+        static constexpr int MAX_PWM_CHANGE = 30;
+    
         const int DIRECTION_PIN1;
         const int DIRECTION_PIN2;
         const int ENCODER_PIN1;
         const int ENCODER_PIN2;
-        int lastInput;
+        float lastInput;
+        int lastTarget;
 
         Encoder *encoder = nullptr;
         PIDController &pidController;

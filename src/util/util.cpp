@@ -1,19 +1,25 @@
 #include <util/util.hpp>
+#include <util/Logger.hpp>
 
 PIDController::PIDController(const float &kP, const float &kI, const float &kD, const float &min, const float &max) : 
     kP(kP), kI(kI), kD(kD), 
     max(max), min(min) {}
 
-float PIDController::adjustmentValue(const float &dt, const float &target, const float &current) {
-    float error = target - current;
+float PIDController::adjustmentValue(const float &dt, const float &error) {
     float derivative = (error - lastError) / dt;
     integral += error * dt;
     value = kP * error + kI * integral + kD * derivative;
     value = constrain(value, min, max);
     lastError = error;
-    // LOG("value", value); LOG("err", error); 
-    // LOG("KP", kP * error); LOG("KI", kI * integral); LOG("KD", kD * derivative); 
+    // Logger::queue("pid.value", value); Logger::queue("pid.error", error);
+    // Logger::queue("KP", kP * error);
+    // Logger::queue("KI", kI * integral);
+    // Logger::queue("KD", kD * derivative);
     return value;
+};
+
+float PIDController::adjustmentValue(const float &dt, const float &target, const float &current) {
+    return adjustmentValue(dt, target - current);
 };
 
 Vector::Vector() {
@@ -47,4 +53,14 @@ Vector Vector::operator*(const float &n) {
 
 Vector Vector::operator/(const float &n) {
     return Vector(Position {}, x / n, y / n);
+}
+
+float wrapAngle180(const float angle) {
+    return std::remainder(angle, 360.0);
+}
+
+float mapRange(const float value, const float fromMin, const float fromMax, const float toMin, const float toMax) {
+    if (fromMin == fromMax) return toMin; 
+    
+    return toMin + (value - fromMin) * (toMax - toMin) / (fromMax - fromMin);
 }

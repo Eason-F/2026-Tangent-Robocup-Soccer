@@ -24,6 +24,7 @@ class PIDController {
         PIDController(const float &kP, const float &kI, const float &kD, const float &min, const float &max);
 
         float adjustmentValue(const float &dt, const float &target, const float &current);
+        float adjustmentValue(const float &dt, const float &error);
 };
 
 class Vector {
@@ -44,3 +45,7 @@ class Vector {
         Vector operator*(const float &n);
         Vector operator/(const float &n);
 };
+
+float wrapAngle180(const float angle);
+
+float mapRange(const float value, const float fromMin, const float fromMax, const float toMin, const float toMax);

@@ -1,4 +1,5 @@
 #include <ir/qikeasy/QikEasy.hpp>
+#include <util/Logger.hpp>
 
 QikEasy::QikEasy(TwoWire &wirePort) : wirePort(wirePort) {}
 
@@ -35,7 +36,8 @@ uint16_t QikEasy::signalStrength(const int &receiverID) {
         strength = wirePort.read() << 8;
         strength |= wirePort.read();
     }
-    // LOG(receiverID - 2, strength);
+    // Logger::queue("receiverID", receiverID - 2);
+    // Logger::queue("receiverStrength", strength);
     return strength;
 }
 
@@ -101,4 +103,8 @@ float QikEasy::getDirectionDegrees() {
 
 float QikEasy::getSignalStrength() {
     return signalVec.magnitude;
+}
+
+bool QikEasy::ballFound() {
+    return signalVec.magnitude > 0;
 }
