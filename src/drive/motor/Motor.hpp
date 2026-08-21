@@ -1,9 +1,10 @@
 #pragma once
 
-#include <util/util.hpp>
-#include <util/Logger.hpp>
 #include <string>
 #include <Encoder.h>
+
+#include <util/Logger.hpp>
+#include <util/PID.hpp>
 
 class Motor {
     public:

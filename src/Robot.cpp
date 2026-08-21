@@ -1,4 +1,5 @@
 #include <Robot.hpp>
+#include <util/util.hpp>
 
 Button::Button(const int &pin): buttonPin(pin) {}
 
@@ -94,7 +95,7 @@ bool Robot::handleEdgeDetection(float dt) {
 }
 
 void Robot::handleHeadingCorrection(const float dt, const float targetHeading) {
-    float headingError = wrapAngle180(imu.getRelativeYaw() - targetHeading);
+    float headingError = util::wrapAngle180(imu.getRelativeYaw() - targetHeading);
     float adjustmentRate = -headingPID.adjustmentValue(dt, headingError) * TURN_SPD;
     drive.rotationRpm = adjustmentRate;
     // Logger::queue("headingErr", headingError);
@@ -119,7 +120,7 @@ void Robot::maneuverAroundBall(const float dt, const float targetBallHeading) {
             break;
         }
         case ORBIT: {
-            float headingError = wrapAngle180(irSensor.getDirectionDegrees() - targetBallHeading);
+            float headingError = util::wrapAngle180(irSensor.getDirectionDegrees() - targetBallHeading);
             float distanceError = ORBIT_DISTANCE - irSensor.getSignalStrength();
 
             float approach = orbitDistancePID.adjustmentValue(dt, distanceError);
@@ -170,9 +171,8 @@ void Robot::checkRobotState(const float dt, const float targetBallHeading) {
         }
     }
 
-    float headingError = abs(wrapAngle180(
-        targetBallHeading - irSensor.getDirectionDegrees()
-    ));
+    float headingError = 
+        abs(util::wrapAngle180(targetBallHeading - irSensor.getDirectionDegrees()));
 
     if (robotState == State::ORBIT) {
         if (headingError > ENTER_ALIGNMENT_TOLERANCE) {

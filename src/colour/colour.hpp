@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Arduino.h>
+#include <util/Vector.hpp>
+
 #include "colourModule/ColourModule.hpp"
 
 class ColourSensor {

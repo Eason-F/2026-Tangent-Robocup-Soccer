@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <drive/Drive.hpp>
 #include <util/Logger.hpp>
+#include <util/util.hpp>
 
 Drive::Drive() :
     motor1("1", DIRECTION_PIN1_1, DIRECTION_PIN2_1, ENCODER_PIN1_1, ENCODER_PIN2_1, motorPID1),
@@ -40,7 +41,7 @@ void Drive::moveToPoint(const float &dt, const int &rpm, const float &targetX, c
     moveInDirection(dt, direction, max(speed, 40));
 }
 
-void Drive::moveToPoint(const float &dt, const int &rpm, const sfe_otos_pose2d_t &target, OpticalOdometry &odometry) {
+void Drive::moveToPoint(const float &dt, const int &rpm, const Position2D &target, OpticalOdometry &odometry) {
     moveToPoint(dt, rpm, target.x, target.y, odometry);
 }
 
