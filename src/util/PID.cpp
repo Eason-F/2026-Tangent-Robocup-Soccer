@@ -7,7 +7,10 @@ PIDController::PIDController(const float &kP, const float &kI, const float &kD, 
     max(max), min(min) {}
 
 float PIDController::adjustmentValue(const float &dt, const float &target, const float &current) {
-    float error = target - current;
+    return adjustmentValue(dt, target - current);
+}
+
+float PIDController::adjustmentValue(const float &dt, const float &error) {
     float derivative = (error - lastError) / dt;
     integral += error * dt;
     value = kP * error + kI * integral + kD * derivative;

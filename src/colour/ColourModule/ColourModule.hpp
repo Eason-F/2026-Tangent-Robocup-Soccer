@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-#include <util/util.hpp>
+#include <util/Vector.hpp>
 
 class ColourModule {
     public:

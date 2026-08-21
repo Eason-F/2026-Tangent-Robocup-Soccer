@@ -6,6 +6,7 @@
 #include <ir/uart/UartIRSensor.hpp>
 #include <imu/imu.hpp>
 #include <util/Logger.hpp>
+#include <util/Vector.hpp>
 #include <util/util.hpp>
 #include <colour/colour.hpp>
 
