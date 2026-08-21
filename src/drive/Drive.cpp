@@ -18,10 +18,10 @@ void Drive::setup() {
 
 void Drive::moveInDirection(const float &dt, int directionDegrees, int rpm) {
     lastDirection = directionDegrees;
-    motor1.setMotorRPM(cos(radians(directionDegrees + 315)) * rpm, dt);
-    motor2.setMotorRPM(cos(radians(directionDegrees + 225)) * rpm, dt);
-    motor3.setMotorRPM(cos(radians(directionDegrees + 45)) * rpm, dt);
-    motor4.setMotorRPM(cos(radians(directionDegrees + 135)) * rpm, dt);
+    motor1.setMotorRPM(cos(radians(directionDegrees + 315)) * rpm + rotationRpm, dt);
+    motor2.setMotorRPM(cos(radians(directionDegrees + 225)) * rpm + rotationRpm, dt);
+    motor3.setMotorRPM(cos(radians(directionDegrees + 45 )) * rpm + rotationRpm, dt);
+    motor4.setMotorRPM(cos(radians(directionDegrees + 135)) * rpm + rotationRpm, dt);
 }
 
 void Drive::moveToPoint(const float &dt, const int &rpm, const float &targetX, const float &targetY, OpticalOdometry &odometry) {
@@ -56,20 +56,4 @@ void Drive::stop() {
     motor2.brake();
     motor3.brake();
     motor4.brake();
-}
-
-bool Drive::headingCorrected(float heading) {
-    return abs(heading - targetHeading) <= HEADING_TOLERANCE_DEGREES;
-}
-
-bool Drive::correctHeading(const float &dt, float heading) {
-    if (headingCorrected(heading)) {
-        return false;
-    }
-
-    int adjustmentRate = abs((heading - targetHeading)) * HEADING_ADJUSTMENT_MULTIPLIER + TURN_SPEED;
-    adjustmentRate *= (heading > 0) ? -1 : 1;
-    turnInDirection(dt, adjustmentRate);
-
-    return true;
 }

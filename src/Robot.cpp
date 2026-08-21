@@ -44,8 +44,8 @@ void Robot::run() {
             float dt = elapsedLastTime / 1000.0f;
             elapsedLastTime = 0;
 
-            // conditionallyBreakLoop(drive.correctHeading(dt, imu.getRelativeYaw()));
             // conditionallyBreakLoop(handleEdgeDetection(dt));
+            handleHeadingCorrection(dt, 0);
             
             maneuverAroundBall(dt, 0);
             // drive.moveInDirection(dt, irSensor.getDirectionDegrees(), 100);
@@ -89,6 +89,15 @@ bool Robot::handleEdgeDetection(float dt) {
     return true;
 }
 
+void Robot::handleHeadingCorrection(const float dt, const float targetHeading) {
+    float headingError = wrapAngle180(imu.getRelativeYaw() - targetHeading);
+    float adjustmentRate = -headingPID.adjustmentValue(dt, headingError) * TURN_SPD;
+    drive.rotationRpm = adjustmentRate;
+    // Logger::queue("headingErr", headingError);
+    // Logger::queue("headingAdj", adjustmentRate);
+}
+
+
 void Robot::maneuverAroundBall(const float dt, const float targetBallHeading) {
     checkRobotState(dt, targetBallHeading);
     switch (robotState) {
@@ -112,7 +121,7 @@ void Robot::maneuverAroundBall(const float dt, const float targetBallHeading) {
             float approach = orbitDistancePID.adjustmentValue(dt, distanceError);
             float tangent = -orbitTangentPID.adjustmentValue(dt, headingError);
 
-            float orbitFactor = 1.0f - min(abs(distanceError) / ORBIT_DISTANCE, 1.0f);
+            float orbitFactor = 1.0f - min(max(0.0, distanceError) / ORBIT_DISTANCE, 1.0f);
             tangent *= orbitFactor;
 
             float approachSpeed = approach * ORBIT_APPROACH_SPD;
@@ -124,8 +133,8 @@ void Robot::maneuverAroundBall(const float dt, const float targetBallHeading) {
             float movementAngle = degrees(finalVector.angle);
             float movementSpeed = min(finalVector.magnitude, ORBIT_SPD);
             drive.moveInDirection(dt, movementAngle, movementSpeed);
-            logger.queue("approachspd", approachSpeed);
-            logger.queue("tangentspd", tangentSpeed);
+            // logger.queue("approachspd", approachSpeed);
+            // logger.queue("tangentspd", tangentSpeed);
             break;
         }
         case CAPTURED: {
@@ -146,7 +155,7 @@ void Robot::checkRobotState(const float dt, const float targetBallHeading) {
     if (robotState != State::CAPTURED) {
         robotState = State::APPROACH;
 
-        if (ORBIT_DISTANCE - irSensor.getSignalStrength() < APPROACH_DISTANCE_TOLERANCE) {
+        if (ORBIT_DISTANCE - irSensor.getSignalStrength() < ORBIT_ENTRY_TOLERANCE) {
             accumulatedOrbitTime += static_cast<unsigned long>(dt * 1000);
 
             if (accumulatedOrbitTime >= ORBIT_DEBOUNCE_MS) {
@@ -169,7 +178,8 @@ void Robot::checkRobotState(const float dt, const float targetBallHeading) {
 
         accumulatedAlignedTime += static_cast<unsigned long>(dt * 1000);
 
-        if (accumulatedAlignedTime >= ALIGNED_DEBOUNCE_MS) {
+        if (accumulatedAlignedTime >= ALIGNED_DEBOUNCE_MS && 
+            irSensor.getSignalStrength() > ORBIT_DISTANCE) {
             robotState = State::CAPTURED;
         }
     } else if (robotState == State::CAPTURED) {

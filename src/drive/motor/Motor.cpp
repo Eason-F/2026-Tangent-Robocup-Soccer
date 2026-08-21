@@ -56,23 +56,18 @@ void Motor::setMotorDutyCycle(int speed) {
 }
 
 void Motor::setMotorRPM(int rpm, const float &dt) {
-    float currentRPM = abs(getRPM(dt));
-    float pidOutput = constrain(pidController.adjustmentValue(dt, abs(rpm), currentRPM), -MAX_PWM_CHANGE, MAX_PWM_CHANGE);
+    float currentRPM = getRPM(dt);
+    float pidOutput = constrain(pidController.adjustmentValue(dt, rpm, currentRPM), -MAX_PWM_CHANGE, MAX_PWM_CHANGE);
     lastInput += pidOutput;
-    lastInput = constrain(lastInput, 0.0f, 255.0f);
-    if (rpm < 0) {
-        analogWrite(DIRECTION_PIN1, (int) lastInput);
+    lastInput = constrain(lastInput, -255.0f, 255.0f);
+
+    if (lastInput < 0) {
+        analogWrite(DIRECTION_PIN1, (int)abs(lastInput));
         analogWrite(DIRECTION_PIN2, 0);
-    } else if (rpm > 0) {
+    } else if (lastInput > 0) {
         analogWrite(DIRECTION_PIN1, 0);
-        analogWrite(DIRECTION_PIN2, (int) lastInput);
+        analogWrite(DIRECTION_PIN2, (int)lastInput);
     } else {
         brake();
     }
-    lastTarget = rpm;
-    // Logger::queue(("target" + name).c_str(), rpm);
-    // Logger::queue(("rpm" + name).c_str(), currentRPM);
-    // Logger::queue(("error" + name).c_str(), abs(rpm) - currentRPM);
-    // Logger::queue(("pid" + name).c_str(), pidOutput);
-    // Logger::queue(("input" + name).c_str(), lastInput);
 }
