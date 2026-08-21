@@ -1,22 +1,19 @@
-#include <Arduino.h>
-
 #include <util/Vector.hpp>
 
-Vector::Vector() {
+Vector::Vector() = default;
+
+Vector::Vector(Position, const float &posX, const float &posY)
+    : x(posX),
+      y(posY),
+      angle(atan2(posY, posX)),
+      magnitude(sqrt(posX * posX + posY * posY)) {
 }
 
-Vector::Vector(Position, const float &posX, const float &posY) {
-    x = posX;
-    y = posY;
-    angle = atan2(posY, posX);
-    magnitude = sqrt(pow(posX, 2) + pow(posY, 2));
-}
-
-Vector::Vector(AngMag, const float &angle, const float &length) {
-    this->angle = angle;
-    magnitude = length;
-    x = length * cos(angle);
-    y = length * sin(angle);
+Vector::Vector(AngMag, const float &angle, const float &length)
+    : x(length * cos(angle)),
+      y(length * sin(angle)),
+      angle(angle),
+      magnitude(length) {
 }
 
 Vector Vector::operator+(const Vector &vec) {
@@ -33,4 +30,12 @@ Vector Vector::operator*(const float &n) {
 
 Vector Vector::operator/(const float &n) {
     return Vector(Position {}, x / n, y / n);
+}
+
+Vector Vector::rotateBy(const float &angle) {
+    float radians = angle * DEG_TO_RAD;
+    float cosAngle = cos(radians);
+    float sinAngle = sin(radians);
+
+    return Vector(Position {}, x * cosAngle - y * sinAngle, x * sinAngle + y * cosAngle);
 }

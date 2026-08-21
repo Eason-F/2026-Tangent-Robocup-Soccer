@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Arduino.h>
+
 class Vector {
     public:
         float x = 0;
@@ -7,7 +9,7 @@ class Vector {
         float angle = 0;
         float magnitude = 0;
 
-        struct Position {}; // Structs for constructor differentiation.
+        struct Position {};
         struct AngMag {};
 
         Vector();
@@ -18,4 +20,6 @@ class Vector {
         Vector operator-(const Vector &vec);
         Vector operator*(const float &n);
         Vector operator/(const float &n);
+
+        Vector rotateBy(const float &angle);
 };
