@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <util/Vector.hpp>
 
-#include "colourModule/ColourModule.hpp"
+#include "ColourModule/ColourModule.hpp"
 
 class ColourSensor {
     public:
