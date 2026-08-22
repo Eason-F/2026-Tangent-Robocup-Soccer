@@ -42,11 +42,11 @@ void Robot::run() {
     }
 
     if (button.isPressed()) {
+        conditionallyBreakLoop(handleEdgeDetection(elapsedLastTime / 1000.0f));
         if (elapsedLastTime >= LOOP_TIME_MS) {
             float dt = elapsedLastTime / 1000.0f;
             elapsedLastTime = 0;
 
-            // conditionallyBreakLoop(handleEdgeDetection(dt));
             handleTargetHeading();
             handleHeadingCorrection(dt, targetHeading);
             
@@ -88,9 +88,15 @@ bool Robot::handleEdgeDetection(float dt) {
         elapsedEscapeTime = 0;
     }
 
+    // if ((elapsedEscapeTime - ESCAPE_DURATION) >= ESCAPE_BUFFER) {
+    //     return false;
+    // } else if (elapsedEscapeTime >= ESCAPE_DURATION) {
+    //     drive.stop();
+    // }
     if (elapsedEscapeTime >= ESCAPE_DURATION) {
         return false;
     }
+    
     drive.moveInDirection(dt, escapeDirection, BOUNDARY_ESCAPE_SPD);
     return true;
 }
